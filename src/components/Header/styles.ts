@@ -4,6 +4,7 @@ export const Container = styled.header`
   padding: 1rem 0;
   display: flex;
   align-items: center;
+  border-bottom: 1px solid ${(props) => props.theme["blueDark"]};
 
   img {
     margin-left: 2rem;
