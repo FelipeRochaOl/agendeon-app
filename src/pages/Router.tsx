@@ -7,6 +7,7 @@ import { darkThemeMui } from "../styles/themes/mui";
 import { Category } from './Dashboard/Category';
 import { Session } from './Dashboard/Session';
 import { Home } from "./Home";
+import { Schedule } from './Schedule';
 import { Services } from "./Services";
 
 export const Router = () => {
@@ -18,8 +19,11 @@ export const Router = () => {
         <Route path="/" element={<WebLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="services" element={<Services />}>
-            <Route path=":section" element={<Services />} />
+            <Route path=":section" element={<Services />}>
+              <Route path=":category" element={<Services />} />
+            </Route>
           </Route>
+          <Route path="schedule/:client" element={<Schedule />} />
         </Route>
         <Route path="dashboard" element={<DashboardLayout />}>
           <Route path="session" element={<Session />} />

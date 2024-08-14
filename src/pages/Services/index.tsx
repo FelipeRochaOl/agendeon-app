@@ -8,14 +8,15 @@ import categoryHairdresser from "../../assets/category-cabeleireiro.png"
 import categoryManicure from "../../assets/category-manicure.png"
 import categoryHairSalon from "../../assets/category-salao.png"
 import sessionHealthAndBeauty from "../../assets/session-saude-beleza.png"
-import starsIcon from "../../assets/star-512.png"
-import phoneWhatsappIcon from "../../assets/whatsapp-512.png"
+
+import { Client } from "../../components/Client"
 import { localizationFormSchema, LocalizationFormValues } from "../../schemas/LocalizationFormSchema"
-import { Client, Container, FormLocalization, GridClient, GridItem, GridItemName, GridItemPhone, GridItemStreet, ItemList, List, PhoneWhatsapp, SectionFilter, SectionLocalization, SectionResults, Stars } from "./styles"
+import { Container, FormLocalization, ItemList, List, SectionFilter, SectionLocalization, SectionResults } from "./styles"
 
 export const Services = () => {
-  const { section } = useParams();
+  const { section, category } = useParams();
   console.log(section ?? "Nenhuma seção selecionada")
+  console.log(category ?? "Nenhuma categoria selecionada")
 
   const {
     register,
@@ -102,62 +103,7 @@ export const Services = () => {
       <SectionFilter>
         <h2>Resultado</h2>
         <SectionResults>
-          <Client>
-            <div className="avatar">
-              <img src="https://randomuser.me/api/portraits/men/74.jpg" alt="John Doe - Cabeleireiro" />
-            </div>
-            <GridClient>
-              <GridItemName>
-                <strong>Nome:</strong>
-                <span>John Doe</span>
-              </GridItemName>
-              <GridItemStreet>
-                <strong>Endereço:</strong>
-                <span>Rua Manoel Matias, 23</span>
-              </GridItemStreet>
-              <GridItemPhone>
-                <strong>Telefone:</strong>
-                <span>(11) 3233-7799</span>
-              </GridItemPhone>
-              <GridItem>
-                <strong>Bairro:</strong>
-                <span>Vila Nova</span>
-              </GridItem>
-              <GridItem>
-                <strong>Distrito:</strong>
-                <span>-</span>
-              </GridItem>
-              <GridItemPhone>
-                <strong>Celular:</strong>
-                <PhoneWhatsapp>
-                  <span>(11) 99876-7799</span>
-                  <img src={phoneWhatsappIcon} alt="Celular com WhatsApp" width={20} />
-                </PhoneWhatsapp>
-              </GridItemPhone>
-              <GridItem>
-                <strong>Cidade:</strong>
-                <span>São Paulo</span>
-              </GridItem>
-              <GridItem>
-                <strong>CEP:</strong>
-                <span>11.211-023</span>
-              </GridItem>
-              <GridItem>
-                <strong>Email:</strong>
-                <span>johndoe@barber.com</span>
-              </GridItem>
-              <GridItem>
-                <strong>Avaliações:</strong>
-                <Stars>
-                  <img src={starsIcon} alt="1 estrelas" width={20} />
-                  <img src={starsIcon} alt="2 estrelas" width={20} />
-                  <img src={starsIcon} alt="3 estrelas" width={20} />
-                  <img src={starsIcon} alt="4 estrelas" width={20} />
-                  <img src={starsIcon} alt="5 estrelas" width={20} />
-                </Stars>
-              </GridItem>
-            </GridClient>
-          </Client>
+          <Client />
         </SectionResults>
       </SectionFilter>
     </Container>
