@@ -4,6 +4,8 @@ import { ptBR } from '@mui/x-date-pickers/locales';
 import moment, { Moment } from 'moment';
 import 'moment/dist/locale/pt-br';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import { BackButton } from '../../components/Back';
 import { Button } from '../../components/Button';
 import { CheckboxService } from '../../components/Checkbox';
@@ -12,6 +14,12 @@ import { Comment, CommentText, Container, ScheduleCalendar, ScheduleForm, Schedu
 
 export const Schedule = () => {
   const [date, setDate] = useState<Moment>(moment());
+  const navigate = useNavigate();
+  const { handleSubmit } = useForm()
+
+  const onSubmit = () => {
+    navigate('/checkout');
+  }
 
   const handleDateChange = (selectedDate: Moment | null) => {
     console.log(selectedDate?.toISOString());
@@ -25,7 +33,7 @@ export const Schedule = () => {
       <BackButton />
       <Client />
       <SectionSchedule>
-        <ScheduleForm>
+        <ScheduleForm onSubmit={handleSubmit(onSubmit)}>
           <ScheduleFormSection>
             <h4>Selecione os serviços desejados:</h4>
             <ScheduleServices>
