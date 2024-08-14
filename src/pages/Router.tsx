@@ -23,7 +23,7 @@ export const Router = () => {
               <Route path=":category" element={<Services />} />
             </Route>
           </Route>
-          <Route path="schedule/:client" element={<Schedule />} />
+          <Route path="schedule/client/:client" element={<Schedule />} />
         </Route>
         <Route path="dashboard" element={<DashboardLayout />}>
           <Route path="session" element={<Session />} />

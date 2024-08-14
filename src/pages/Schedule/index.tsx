@@ -4,6 +4,7 @@ import { ptBR } from '@mui/x-date-pickers/locales';
 import moment, { Moment } from 'moment';
 import 'moment/dist/locale/pt-br';
 import { useState } from 'react';
+import { BackButton } from '../../components/Back';
 import { Button } from '../../components/Button';
 import { CheckboxService } from '../../components/Checkbox';
 import { Client } from '../../components/Client';
@@ -21,6 +22,7 @@ export const Schedule = () => {
 
   return (
     <Container>
+      <BackButton />
       <Client />
       <SectionSchedule>
         <ScheduleForm>
