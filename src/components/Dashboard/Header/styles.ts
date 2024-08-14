@@ -10,45 +10,6 @@ export const Container = styled.header`
     margin-left: 2rem;
   }
 
-  nav ul {
-    margin-left: 3rem;
-    display: flex;
-    list-style: none;
-
-    li {
-      margin-left: 1rem;
-
-      a {
-        font-size: 0.9rem;
-        font-weight: bold;
-        color: ${(props) => props.theme["white"]};
-        text-decoration: none;
-        transition: color 0.2s;
-
-        &:hover {
-          color: ${(props) => props.theme["blue"]};
-        }
-
-        &.active {
-          color: ${(props) => props.theme["blue"]};
-        }
-      }
-    }
-  }
-
-  .login {
-    margin-left: auto;
-    margin-right: 2rem;
-    padding: 0.5rem 2rem;
-    background: ${(props) => props.theme["blueDark"]};
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 1.5rem;
-    font-weight: bold;
-    font-size: 0.9rem;
-  }
-
   .logout {
     margin-left: auto;
     margin-right: 2rem;

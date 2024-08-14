@@ -12,7 +12,7 @@ export const Home = () => {
           <p>Aqui você pode agendar o serviço desejado de forma simples</p>
           <p>Para você que é um prestador de serviço, faça parte do nosso time e ofereça seus serviços através de nossa plataforma, disponibilize e acompanhe sua agenda de forma online</p>
         </div>
-        <Link to="/serviços">Encontrar</Link>
+        <Link to="/services">Encontrar</Link>
       </TextSection>
       <ImageSection>
         <img src={homeSvg} alt="Home" width={804} />
