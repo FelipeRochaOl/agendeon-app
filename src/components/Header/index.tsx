@@ -4,9 +4,9 @@ import logo from "../../assets/logo.svg";
 import { Container } from "./styles";
 
 export const Header = () => {
-  const [isLogged, setIsLogged] = useState(false);
+  const [isLogged, setIsLogged] = useState(true);
   useEffect(() => {
-    setIsLogged(false);
+    setIsLogged(true);
   }, [])
   return (
     <Container>
@@ -22,7 +22,7 @@ export const Header = () => {
         </ul>
       </nav>
       {isLogged
-        ? <NavLink to="/login" className="logout">
+        ? <NavLink to="/dashboard" className="logout">
           <img src="https://randomuser.me/api/portraits/thumb/men/75.jpg" alt="Avatar" />
           <span>John Doe</span>
         </NavLink>

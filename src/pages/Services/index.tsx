@@ -22,7 +22,6 @@ export const Services = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<LocalizationFormValues>({ resolver: zodResolver(localizationFormSchema) })
-  console.log(errors)
   const onSubmit: SubmitHandler<LocalizationFormValues> = (data) => console.log(data)
 
   return (
@@ -61,7 +60,7 @@ export const Services = () => {
         </FormLocalization>
       </SectionLocalization>
       <SectionFilter>
-        <h2>Sessão</h2>
+        <h2>Seção</h2>
         <List>
           <ItemList>
             <Link to="/services/health-beauty">
