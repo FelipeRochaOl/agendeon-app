@@ -9,6 +9,7 @@ export const Container = styled.div`
   gap: 1rem;
   border: 1px solid transparent;
   transition: border 0.3s ease-in-out;
+  cursor: pointer;
 
   .avatar {
     img {

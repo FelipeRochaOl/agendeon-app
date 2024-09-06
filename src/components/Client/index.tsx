@@ -1,11 +1,16 @@
+import { useNavigate } from "react-router-dom"
 import calendarAvailableIcon from "../../assets/calendar-512.png"
 import starsIcon from "../../assets/star-512.png"
 import phoneWhatsappIcon from "../../assets/whatsapp-512.png"
 import { Container, GridClient, GridItem, GridItemCellPhone, GridItemName, GridItemPhone, GridItemStreet, PhoneWhatsapp, ScheduleAvailable, Stars } from "./styles"
 
 export const Client = () => {
+  const navigate = useNavigate()
+  const handleOpenSchedulePage = () => {
+    navigate('/schedule/client/1')
+  }
   return (
-    <Container>
+    <Container onClick={handleOpenSchedulePage}>
       <div className="avatar">
         <img src="https://randomuser.me/api/portraits/men/74.jpg" alt="John Doe - Cabeleireiro" />
       </div>
