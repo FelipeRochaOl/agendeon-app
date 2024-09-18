@@ -7,7 +7,6 @@ export const CheckboxService = (props: ICheckboxProps) => {
   const [checked, setChecked] = useState(false)
 
   const handleChecked = () => {
-    console.log(checked)
     setChecked(!checked)
   }
 

@@ -10,9 +10,8 @@ import { sessionFormSchema, SessionFormValues } from "../../../schemas/SessionFo
 import { Buttons, Container } from "./styles"
 
 export const Session = () => {
-  const { sessions, getSessions, deleteSession, updateSession, createSession } = useContext(SessionContext)
+  const { sessions, getSessions, deleteSession, updateSession, createSession, openForm, setOpenForm } = useContext(SessionContext)
   const [code, setCode] = useState("")
-  const [openForm, setOpenForm] = useState(false)
 
   const {
     register,
@@ -22,9 +21,6 @@ export const Session = () => {
     reset,
     formState: { errors },
   } = useForm<SessionFormValues>({ resolver: zodResolver(sessionFormSchema) })
-
-  const openFormHandler = () => setOpenForm(true)
-  const closeFormHandler = () => resetForm()
 
   const resetForm = () => {
     reset()
@@ -56,13 +52,13 @@ export const Session = () => {
   }
 
   useEffect(() => {
-    if (sessions.length === 0) getSessions()
+    if (sessions?.length === 0) getSessions()
   }, [sessions, getSessions])
 
   return (
     <Container>
       <h1>Seção</h1>
-      <Button variant="outlined" size="small" startIcon={<MdInsertDriveFile />} onClick={openFormHandler}>Cadastrar</Button>
+      <Button variant="outlined" size="small" startIcon={<MdInsertDriveFile />} onClick={() => setOpenForm(true)}>Cadastrar</Button>
       {openForm && <form onSubmit={handleSubmit(onSubmit)}>
         <h2>Cadastrar uma seção</h2>
         <TextField
@@ -76,7 +72,7 @@ export const Session = () => {
         />
         <Buttons>
           <Button variant="outlined" type="submit" size="small">Salvar</Button>
-          <Button variant="outlined" size="small" color="error" onClick={closeFormHandler}>Fechar</Button>
+          <Button variant="outlined" size="small" color="error" onClick={resetForm}>Fechar</Button>
         </Buttons>
       </form>}
       <SessionTable sessions={sessions} editSession={editSession} deleteSession={deleteSession} />

@@ -1,3 +1,4 @@
+import { CategoryProvider } from "./CategoryContext";
 import { ClientProvider } from "./ClientContext";
 import { SessionProvider } from "./SessionContext";
 
@@ -7,10 +8,13 @@ interface GlobalContextProps {
 
 export const GlobalProvider = ({ children }: GlobalContextProps) => {
   return (
+
     <SessionProvider>
-      <ClientProvider>
-        {children}
-      </ClientProvider>
+      <CategoryProvider>
+        <ClientProvider>
+          {children}
+        </ClientProvider>
+      </CategoryProvider>
     </SessionProvider>
   )
 }

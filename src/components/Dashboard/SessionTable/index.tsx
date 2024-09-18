@@ -7,7 +7,7 @@ import TableContainer from "@mui/material/TableContainer/TableContainer"
 import TableHead from "@mui/material/TableHead/TableHead"
 import TableRow from "@mui/material/TableRow/TableRow"
 import { MdDelete, MdEdit } from "react-icons/md"
-import { Session } from "../../../context/SessionContext"
+import { Session } from "../../../interfaces/Session"
 
 interface SessionTableProps {
   sessions: Session[]
@@ -35,10 +35,10 @@ export const SessionTable = ({ sessions, deleteSession, editSession }: SessionTa
                 {session.name}
               </TableCell>
               <TableCell align="right">
-                <IconButton color="warning" aria-label="Deletar" onClick={() => deleteSession(session.code)}>
+                <IconButton color="warning" aria-label="Deletar" onClick={() => deleteSession(session.code!)}>
                   <MdDelete />
                 </IconButton>
-                <IconButton color="info" aria-label="Editar" onClick={() => editSession(session.code)}>
+                <IconButton color="info" aria-label="Editar" onClick={() => editSession(session.code!)}>
                   <MdEdit />
                 </IconButton>
               </TableCell>

@@ -7,9 +7,15 @@ import TableContainer from "@mui/material/TableContainer/TableContainer"
 import TableHead from "@mui/material/TableHead/TableHead"
 import TableRow from "@mui/material/TableRow/TableRow"
 import { MdDelete, MdEdit } from "react-icons/md"
+import { Category } from "../../../interfaces/Category"
 
+interface CategoryTableProps {
+  categories: Category[]
+  deleteCategory: (code: string) => void
+  editCategory: (code: string) => void
+}
 
-export const CategoryTable = () => {
+export const CategoryTable = ({ categories, deleteCategory, editCategory }: CategoryTableProps) => {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: '100%' }} size="small">
@@ -21,23 +27,25 @@ export const CategoryTable = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          <TableRow
-            key="1"
-            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-          >
-            <TableCell component="th" scope="row">
-              Saúde e Beleza
-            </TableCell>
-            <TableCell>Salão de beleza</TableCell>
-            <TableCell align="right">
-              <IconButton color="warning" aria-label="Deletar">
-                <MdDelete />
-              </IconButton>
-              <IconButton color="info" aria-label="Editar">
-                <MdEdit />
-              </IconButton>
-            </TableCell>
-          </TableRow>
+          {categories.map((category) => (
+            <TableRow
+              key={category.code}
+              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+            >
+              <TableCell component="th" scope="row">
+                {category.session.name}
+              </TableCell>
+              <TableCell>{category.name}</TableCell>
+              <TableCell align="right">
+                <IconButton color="warning" aria-label="Deletar">
+                  <MdDelete onClick={() => deleteCategory(category.code)} />
+                </IconButton>
+                <IconButton color="info" aria-label="Editar">
+                  <MdEdit onClick={() => editCategory(category.code)} />
+                </IconButton>
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     </TableContainer>

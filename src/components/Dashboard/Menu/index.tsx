@@ -7,10 +7,14 @@ import Paper from '@mui/material/Paper/Paper';
 import { CiLogout } from 'react-icons/ci';
 import { FaUsers } from 'react-icons/fa';
 import { MdAddBusiness, MdCategory, MdContentPaste } from 'react-icons/md';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Container } from './styles';
 
 export const Menu = () => {
+  const navigate = useNavigate()
+  const handleLink = (path: string) => {
+    navigate(path)
+  }
   return (
     <Container>
       <Paper sx={{ width: 300, maxWidth: '100%' }}>
@@ -18,20 +22,20 @@ export const Menu = () => {
           <MenuItem>
             <ListItemText>Cadastros</ListItemText>
           </MenuItem>
-          <MenuItem>
+          <MenuItem onClick={() => handleLink('session')}>
             <ListItemIcon>
               <MdContentPaste size={16} />
             </ListItemIcon>
             <ListItemText>
-              <Link to="session">Seção</Link>
+              Seção
             </ListItemText>
           </MenuItem>
-          <MenuItem>
+          <MenuItem onClick={() => handleLink('category')}>
             <ListItemIcon>
               <MdCategory size={16} />
             </ListItemIcon>
             <ListItemText>
-              <Link to="category">Categoria</Link>
+              Categoria
             </ListItemText>
           </MenuItem>
           <MenuItem>
@@ -39,7 +43,7 @@ export const Menu = () => {
               <MdAddBusiness size={16} />
             </ListItemIcon>
             <ListItemText>
-              <Link to="category">Prestadores de Serviço</Link>
+              Prestadores de Serviço
             </ListItemText>
           </MenuItem>
           <MenuItem>
@@ -47,16 +51,16 @@ export const Menu = () => {
               <FaUsers size={16} />
             </ListItemIcon>
             <ListItemText>
-              <Link to="category">Clientes</Link>
+              Clientes
             </ListItemText>
           </MenuItem>
           <Divider />
-          <MenuItem>
+          <MenuItem onClick={() => handleLink('/')}>
             <ListItemIcon>
               <CiLogout size={16} />
             </ListItemIcon>
             <ListItemText>
-              <Link to="/">Sair</Link>
+              Sair
             </ListItemText>
           </MenuItem>
         </MenuList>

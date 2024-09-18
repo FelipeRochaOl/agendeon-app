@@ -1,9 +1,5 @@
 import { createContext, ReactElement, useState } from "react";
-
-export interface Session {
-  code: string;
-  name: string;
-}
+import { Session } from "../interfaces/Session";
 
 interface SessionContextType {
   sessions: Session[];
@@ -11,6 +7,8 @@ interface SessionContextType {
   createSession: (sessions: Omit<Session, 'code'>) => Promise<void>;
   updateSession: (sessions: Session) => Promise<void>;
   deleteSession: (code: string) => Promise<void>;
+  openForm: boolean;
+  setOpenForm: (open: boolean) => void;
 }
 
 export const SessionContext = createContext({} as SessionContextType);
@@ -21,6 +19,7 @@ interface SessionProviderProps {
 
 export const SessionProvider = ({ children }: SessionProviderProps): ReactElement<SessionContextType> => {
   const [sessions, setSessions] = useState<Session[]>([]);
+  const [openForm, setOpenForm] = useState(false);
 
   const getSessions = async () => {
     const auth = 'feliperochaoliveira@gmail.com:123456'
@@ -77,7 +76,9 @@ export const SessionProvider = ({ children }: SessionProviderProps): ReactElemen
   };
 
   return (
-    <SessionContext.Provider value={{ sessions, getSessions, createSession, updateSession, deleteSession }}>
+    <SessionContext.Provider value={{
+      sessions, getSessions, createSession, updateSession, deleteSession, openForm, setOpenForm
+    }}>
       {children}
     </SessionContext.Provider>
   );
