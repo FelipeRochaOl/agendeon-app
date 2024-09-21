@@ -542,6 +542,18 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.8.tgz#6b79032e760a0899cd4204710beede972a3a185f"
   integrity sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==
 
+"@react-input/core@^1.0.17":
+  version "1.0.17"
+  resolved "https://registry.yarnpkg.com/@react-input/core/-/core-1.0.17.tgz#60754ebdb6fb3fd2656da1001e3813cb13c6cd14"
+  integrity sha512-h2jD0zjv/V2D0AVoObj6PKFskCYQyrtrYLALSkjxii2odHza8Dt3RcAj7q8sFJqk7kKdT2BJewQJzlyZAlTwUg==
+
+"@react-input/mask@^1.2.10":
+  version "1.2.10"
+  resolved "https://registry.yarnpkg.com/@react-input/mask/-/mask-1.2.10.tgz#d904dcbeeb70d8a4ed44fd274ef963c2c7d28934"
+  integrity sha512-utOiwKC7eLq+WOSD/SGApvXj3LBDT5eKwbxpZ+bMz9Q5sEVbty+JuquiMgoD0xzbvFNDwgJrFY3l/ta/qwOJWg==
+  dependencies:
+    "@react-input/core" "^1.0.17"
+
 "@remix-run/router@1.19.0":
   version "1.19.0"
   resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.19.0.tgz#745dbffbce67f05386d57ca22c51dfd85c979593"
@@ -1554,7 +1566,14 @@ minimatch@^9.0.4:
   dependencies:
     brace-expansion "^2.0.1"
 
-moment@^2.30.1:
+moment-timezone@^0.5.45:
+  version "0.5.45"
+  resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.45.tgz#cb685acd56bac10e69d93c536366eb65aa6bcf5c"
+  integrity sha512-HIWmqA86KcmCAhnMAN0wuDOARV/525R2+lOLotuGFzn4HO+FH+/645z2wx0Dt3iDv6/p61SIvKnDstISainhLQ==
+  dependencies:
+    moment "^2.29.4"
+
+moment@^2.29.4, moment@^2.30.1:
   version "2.30.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.30.1.tgz#f8c91c07b7a786e30c59926df530b4eac96974ae"
   integrity sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==

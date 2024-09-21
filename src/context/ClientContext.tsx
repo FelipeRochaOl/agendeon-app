@@ -4,8 +4,8 @@ import { User } from "./UserContext";
 export interface Client {
   id: string
   name: string
-  cpf: string
-  age: number
+  cpf?: string
+  age?: number
   user: User
   createdAt: string[]
   deleted: boolean
@@ -13,9 +13,7 @@ export interface Client {
 
 interface ClientContextType {
   clients: Client[];
-  me?: Client;
   getClients: () => Promise<void>;
-  getMe: () => Promise<void>;
   createClient: (clients: Client) => Promise<void>;
   updateClient: (clients: Client) => Promise<void>;
   deleteClient: (code: string) => Promise<void>;
@@ -29,7 +27,6 @@ interface ClientProviderProps {
 
 export const ClientProvider = ({ children }: ClientProviderProps): ReactElement<ClientContextType> => {
   const [clients, setClients] = useState<Client[]>([]);
-  const [me, setMe] = useState<Client>();
 
   const getClients = async () => {
     const auth = 'feliperochaoliveira@gmail.com:123456'
@@ -42,18 +39,6 @@ export const ClientProvider = ({ children }: ClientProviderProps): ReactElement<
     const data: Client[] = await response.json()
     setClients(data);
   };
-
-  const getMe = async () => {
-    const auth = 'feliperochaoliveira@gmail.com:123456'
-    const response = await fetch('http://localhost:8080/me/', {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa(auth)
-      }
-    })
-    const data: Client = await response.json()
-    setMe(data);
-  }
 
   const createClient = async (client: Client) => {
     const auth = 'feliperochaoliveira@gmail.com:123456'
@@ -96,7 +81,7 @@ export const ClientProvider = ({ children }: ClientProviderProps): ReactElement<
   };
 
   return (
-    <ClientContext.Provider value={{ clients, me, getMe, getClients, createClient, updateClient, deleteClient }}>
+    <ClientContext.Provider value={{ clients, getClients, createClient, updateClient, deleteClient }}>
       {children}
     </ClientContext.Provider>
   );

@@ -1,11 +1,15 @@
 import styled from "styled-components";
 
-export const Container = styled.button`
+interface IButtonPropsHydrated {
+  $color: "yellow" | "green";
+}
+
+export const Container = styled.button<IButtonPropsHydrated>`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem 2.5rem;
-  background-color: ${(props) => props.theme["yellow"]};
+  padding: 1rem 2.5rem;
+  background-color: ${(props) => props.theme[props.$color]};
   border-radius: 1.5rem;
   color: ${(props) => props.theme["background"]};
   font-weight: bold;

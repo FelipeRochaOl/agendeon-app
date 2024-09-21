@@ -7,13 +7,12 @@ export const CheckboxService = (props: ICheckboxProps) => {
   const [checked, setChecked] = useState(false)
 
   const handleChecked = () => {
-    console.log(checked)
     setChecked(!checked)
   }
 
   return (
     <Container onClick={handleChecked} $checked={checked}>
-      <input type="checkbox" {...props} checked onClick={handleChecked} />
+      <input type="checkbox" {...props} defaultChecked={checked} onChange={handleChecked} />
       <span>{props.value}</span>
     </Container>
   )
