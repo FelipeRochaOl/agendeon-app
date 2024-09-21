@@ -77,9 +77,8 @@ export const Category = () => {
       </Button>
       {openForm && <form onSubmit={handleSubmit(onSubmit)}>
         <h2>Cadastro ou edição da categoria</h2>
-
         <FormControl fullWidth error={!!errors.session}>
-          <InputLabel id="session-label">Seção</InputLabel>
+          <InputLabel sx={{ mx: -1.9, }} id="session-label" className="label">Seção</InputLabel>
           <Controller
             control={control}
             rules={{ required: true }}

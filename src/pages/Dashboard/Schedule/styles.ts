@@ -3,14 +3,15 @@ import styled from "styled-components";
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  max-width: 1200px;
+  width: 100%;
   padding: 0.5rem 2rem;
   margin: 0 auto;
+  gap: 1rem;
 `;
 
 export const SectionSchedule = styled.section`
   display: flex;
-  flex: 1;
+  flex-direction: column;
   padding: 1rem;
   gap: 0.5rem;
 `;
@@ -24,10 +25,6 @@ export const ScheduleFormSection = styled.div`
   flex-direction: column;
   margin: 1rem 0;
   gap: 1rem;
-
-  .MuiDialogActions-root {
-    display: none;
-  }
 `;
 
 export const ScheduleServices = styled.div`

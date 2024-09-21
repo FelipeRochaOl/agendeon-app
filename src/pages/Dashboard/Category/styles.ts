@@ -21,11 +21,15 @@ export const Container = styled.div`
     border: 1px solid ${(props) => props.theme["blue"]};
     padding: 1rem;
     border-radius: 0.5rem;
-    text-align: center;
+    text-align: left;
   }
 `;
 
 export const Buttons = styled.div`
   display: flex;
   gap: 1rem;
+`;
+
+export const Left = styled.div`
+  text-align: left;
 `;
