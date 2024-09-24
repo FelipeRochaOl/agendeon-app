@@ -1,7 +1,9 @@
-import { createContext, useState } from "react"
+import { createContext, useContext, useState } from "react"
+import { API_URL } from "../config/Http"
+import { AuthContext } from "./AuthContext"
 
 export interface Address {
-  id: string
+  id?: string
   street: string
   number: string
   complement: string
@@ -17,7 +19,7 @@ interface AddressContextType {
   address: Omit<Address, 'id'>
   addresses: Address[]
   getAddresses: () => void
-  createAddress: (address: Address) => void
+  createAddress: (address: Address) => Promise<string | undefined>
   updateAddress: (address: Address) => void
   deleteAddress: (id: string) => void
   getAddressWithCEP: (cep: string) => void
@@ -30,15 +32,16 @@ interface AddressProviderProps {
 }
 
 export const AddressProvider = ({ children }: AddressProviderProps) => {
+  const { token } = useContext(AuthContext)
+  const url = `${API_URL}/address`
   const [addresses, setAddress] = useState<Address[]>([])
   const [address, setAddressCEP] = useState<Omit<Address, 'id'>>({} as Omit<Address, 'id'>)
 
   const getAddresses = async () => {
-    const auth = 'feliperochaoliveira@gmail.com:123456'
-    const response = await fetch('http://localhost:8080/address/', {
+    const response = await fetch(`${url}/`, {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa(auth)
+        'Authorization': 'Bearer ' + token
       }
     })
     const data: Address[] = await response.json()
@@ -46,26 +49,27 @@ export const AddressProvider = ({ children }: AddressProviderProps) => {
   }
 
   const createAddress = async (addressNew: Address) => {
-    const auth = 'feliperochaoliveira@gmail.com:123456'
-    await fetch('http://localhost:8080/address/', {
+    const response = await fetch(`${url}/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa(auth)
+        'Authorization': 'Bearer ' + token
       },
       body: JSON.stringify(addressNew)
     })
-    setAddress([...addresses, addressNew]);
+    const data = await response.json()
+    const address: Address = data
+    setAddress([...addresses, address]);
+    return address.id
   }
 
   const updateAddress = async (addressPut: Address) => {
-    const auth = 'feliperochaoliveira@gmail.com:123456'
     const { id, ...data } = addressPut
-    await fetch(`http://localhost:8080/address/${id}`, {
+    await fetch(`${url}/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa(auth)
+        'Authorization': 'Bearer ' + token
       },
       body: JSON.stringify(data)
     })
@@ -73,12 +77,11 @@ export const AddressProvider = ({ children }: AddressProviderProps) => {
   }
 
   const deleteAddress = async (id: string) => {
-    const auth = 'feliperochaoliveira@gmail.com:123456'
-    await fetch(`http://localhost:8080/address/${id}`, {
+    await fetch(`${url}/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa(auth)
+        'Authorization': 'Bearer ' + token
       }
     })
     const result = addresses.filter((data) => data.id !== id);
@@ -92,12 +95,12 @@ export const AddressProvider = ({ children }: AddressProviderProps) => {
       street: data.logradouro,
       neighborhood: data.bairro,
       city: data.localidade,
-      state: data.uf,
+      state: data.estado,
       uf: data.uf,
       zip: data.cep,
-      country: 'Brasil',
+      country: 'BR',
       number: '',
-      complement: ''
+      complement: data.complemento
     })
   }
 

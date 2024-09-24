@@ -1,4 +1,6 @@
-import { createContext, useState } from "react"
+import { createContext, useContext, useState } from "react"
+import { API_URL } from "../config/Http"
+import { AuthContext } from "./AuthContext"
 
 export interface Service {
   code: string
@@ -22,14 +24,16 @@ interface ServiceProviderProps {
 }
 
 export const ServiceProvider = ({ children }: ServiceProviderProps) => {
+  const { token } = useContext(AuthContext)
+  const url = `${API_URL}/services`
   const [services, setService] = useState<Service[]>([])
 
   const getServices = async () => {
-    const auth = 'feliperochaoliveira@gmail.com:123456'
-    const response = await fetch('http://localhost:8080/services/', {
+
+    const response = await fetch(`${url}/`, {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa(auth)
+        'Authorization': 'Bearer ' + token
       }
     })
     const data: Service[] = await response.json()
@@ -37,12 +41,11 @@ export const ServiceProvider = ({ children }: ServiceProviderProps) => {
   }
 
   const createService = async (serviceNew: Service) => {
-    const auth = 'feliperochaoliveira@gmail.com:123456'
-    await fetch('http://localhost:8080/services/', {
+    await fetch(`${url}/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa(auth)
+        'Authorization': 'Bearer ' + token
       },
       body: JSON.stringify(serviceNew)
     })
@@ -50,13 +53,12 @@ export const ServiceProvider = ({ children }: ServiceProviderProps) => {
   }
 
   const updateService = async (servicePut: Service) => {
-    const auth = 'feliperochaoliveira@gmail.com:123456'
     const { code, ...data } = servicePut
-    await fetch(`http://localhost:8080/services/${code}`, {
+    await fetch(`${url}/${code}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa(auth)
+        'Authorization': 'Bearer ' + token
       },
       body: JSON.stringify(data)
     })
@@ -64,12 +66,11 @@ export const ServiceProvider = ({ children }: ServiceProviderProps) => {
   }
 
   const deleteService = async (code: string) => {
-    const auth = 'feliperochaoliveira@gmail.com:123456'
-    await fetch(`http://localhost:8080/services/${code}`, {
+    await fetch(`${url}/${code}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa(auth)
+        'Authorization': 'Bearer ' + token
       }
     })
     const result = services.filter((data) => data.code !== code);

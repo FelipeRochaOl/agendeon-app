@@ -1,5 +1,7 @@
-import { createContext, ReactElement, useState } from "react";
+import { createContext, ReactElement, useContext, useState } from "react";
+import { API_URL } from "../config/Http";
 import { Category, CategoryRequest } from "../interfaces/Category";
+import { AuthContext } from "./AuthContext";
 
 interface CategoryContextType {
   categories: Category[];
@@ -18,16 +20,16 @@ interface CategoryProviderProps {
 }
 
 export const CategoryProvider = ({ children }: CategoryProviderProps): ReactElement<CategoryContextType> => {
-  const url = 'http://localhost:8080/categories/'
+  const url = `${API_URL}/categories`
+  const { token } = useContext(AuthContext)
   const [categories, setCategories] = useState<Category[]>([]);
   const [openForm, setOpenForm] = useState(false);
 
   const getCategories = async () => {
-    const auth = 'feliperochaoliveira@gmail.com:123456'
     const response = await fetch(url, {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa(auth)
+        'Authorization': 'Bearer ' + token
       }
     })
     const data: Category[] = await response.json()
@@ -35,12 +37,11 @@ export const CategoryProvider = ({ children }: CategoryProviderProps): ReactElem
   };
 
   const createCategory = async (category: Omit<CategoryRequest, 'code'>) => {
-    const auth = 'feliperochaoliveira@gmail.com:123456'
     await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa(auth)
+        'Authorization': 'Bearer ' + token
       },
       body: JSON.stringify({
         sessionCode: category.sessionCode,
@@ -51,12 +52,11 @@ export const CategoryProvider = ({ children }: CategoryProviderProps): ReactElem
   };
 
   const updateCategory = async (category: CategoryRequest) => {
-    const auth = 'feliperochaoliveira@gmail.com:123456'
     await fetch(`${url}/${category.code}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa(auth)
+        'Authorization': 'Bearer ' + token
       },
       body: JSON.stringify({
         sessionCode: category.sessionCode,
@@ -67,12 +67,11 @@ export const CategoryProvider = ({ children }: CategoryProviderProps): ReactElem
   };
 
   const deleteCategory = async (code: string) => {
-    const auth = 'feliperochaoliveira@gmail.com:123456'
     await fetch(`${url}/${code}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa(auth)
+        'Authorization': 'Bearer ' + token
       }
     })
     await getCategories()

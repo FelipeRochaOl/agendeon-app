@@ -1,5 +1,7 @@
-import { createContext, ReactElement, useState } from "react";
+import { createContext, ReactElement, useContext, useState } from "react";
+import { API_URL } from "../config/Http";
 import { Session } from "../interfaces/Session";
+import { AuthContext } from "./AuthContext";
 
 interface SessionContextType {
   sessions: Session[];
@@ -18,15 +20,16 @@ interface SessionProviderProps {
 }
 
 export const SessionProvider = ({ children }: SessionProviderProps): ReactElement<SessionContextType> => {
+  const { token } = useContext(AuthContext)
+  const url = `${API_URL}/session`
   const [sessions, setSessions] = useState<Session[]>([]);
   const [openForm, setOpenForm] = useState(false);
 
   const getSessions = async () => {
-    const auth = 'feliperochaoliveira@gmail.com:123456'
-    const response = await fetch('http://localhost:8080/session/', {
+    const response = await fetch(`${url}/`, {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa(auth)
+        'Authorization': 'Bearer ' + token
       }
     })
     const data: Session[] = await response.json()
@@ -34,12 +37,11 @@ export const SessionProvider = ({ children }: SessionProviderProps): ReactElemen
   };
 
   const createSession = async (session: Omit<Session, 'code'>) => {
-    const auth = 'feliperochaoliveira@gmail.com:123456'
-    await fetch('http://localhost:8080/session/', {
+    await fetch(`${url}/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa(auth)
+        'Authorization': 'Bearer ' + token
       },
       body: JSON.stringify({
         name: session.name
@@ -49,12 +51,11 @@ export const SessionProvider = ({ children }: SessionProviderProps): ReactElemen
   };
 
   const updateSession = async (session: Session) => {
-    const auth = 'feliperochaoliveira@gmail.com:123456'
-    await fetch(`http://localhost:8080/session/${session.code}`, {
+    await fetch(`${url}/${session.code}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa(auth)
+        'Authorization': 'Bearer ' + token
       },
       body: JSON.stringify({
         name: session.name
@@ -64,12 +65,11 @@ export const SessionProvider = ({ children }: SessionProviderProps): ReactElemen
   };
 
   const deleteSession = async (code: string) => {
-    const auth = 'feliperochaoliveira@gmail.com:123456'
-    await fetch(`http://localhost:8080/session/${code}`, {
+    await fetch(`${url}/${code}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa(auth)
+        'Authorization': 'Bearer ' + token
       }
     })
     await getSessions()
