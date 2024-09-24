@@ -8,6 +8,8 @@ export const signUpFormSchema = z
     tradeName: z.string().optional(),
     cnpj: z.string().optional(),
     cpf: z.string().optional(),
+    sessionId: z.string().optional(),
+    categoryId: z.string().optional(),
     address: z
       .object({
         street: z.string().optional(),
@@ -104,7 +106,23 @@ export const signUpFormSchema = z
           message: "Rua deve ter no mínimo 3 caracteres",
         });
       }
-    } else {
+      if (!data.categoryId) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["categoryId"],
+          message: "Categoria é obrigatória",
+        });
+      }
+      if (!data.sessionId) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["sessionId"],
+          message: "Sessão é obrigatória",
+        });
+      }
+    }
+
+    if (!data.isBusiness) {
       if (!data.cpf) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,

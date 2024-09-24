@@ -33,7 +33,7 @@ interface AddressProviderProps {
 
 export const AddressProvider = ({ children }: AddressProviderProps) => {
   const { token } = useContext(AuthContext)
-  const url = `${API_URL}/address`
+  const url = `${API_URL}/addresses`
   const [addresses, setAddress] = useState<Address[]>([])
   const [address, setAddressCEP] = useState<Omit<Address, 'id'>>({} as Omit<Address, 'id'>)
 
@@ -44,8 +44,9 @@ export const AddressProvider = ({ children }: AddressProviderProps) => {
         'Authorization': 'Bearer ' + token
       }
     })
-    const data: Address[] = await response.json()
-    setAddress(data);
+    const { data } = await response.json()
+    const address: Address[] = data
+    setAddress(address);
   }
 
   const createAddress = async (addressNew: Address) => {
@@ -57,7 +58,7 @@ export const AddressProvider = ({ children }: AddressProviderProps) => {
       },
       body: JSON.stringify(addressNew)
     })
-    const data = await response.json()
+    const { data } = await response.json()
     const address: Address = data
     setAddress([...addresses, address]);
     return address.id

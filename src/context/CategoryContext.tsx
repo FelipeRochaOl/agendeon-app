@@ -26,18 +26,19 @@ export const CategoryProvider = ({ children }: CategoryProviderProps): ReactElem
   const [openForm, setOpenForm] = useState(false);
 
   const getCategories = async () => {
-    const response = await fetch(url, {
+    const response = await fetch(`${url}/`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + token
       }
     })
-    const data: Category[] = await response.json()
-    setCategories(data);
+    const { data } = await response.json()
+    const categories: Category[] = data
+    setCategories(categories);
   };
 
   const createCategory = async (category: Omit<CategoryRequest, 'code'>) => {
-    await fetch(url, {
+    const categoryResponse = await fetch(`${url}/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -48,7 +49,10 @@ export const CategoryProvider = ({ children }: CategoryProviderProps): ReactElem
         name: category.name
       })
     })
-    await getCategories()
+    const { data } = await categoryResponse.json()
+    if (!data) return
+    const newCategory: Category = data
+    setCategories([...categories, newCategory])
   };
 
   const updateCategory = async (category: CategoryRequest) => {

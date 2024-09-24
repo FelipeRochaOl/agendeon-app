@@ -1,4 +1,5 @@
 import { createContext, useState } from "react";
+import { Toast } from "../components/Toast";
 import { API_URL } from "../config/Http";
 
 
@@ -19,7 +20,7 @@ export interface AuthContextType {
   expirationToken: number;
   isAuthenticated: boolean;
   setIsAuthenticated: (isAuthenticated: boolean) => void;
-  login: (data: AuthRequest) => Promise<Auth>;
+  login: (data: AuthRequest) => Promise<Auth | null>;
   signUp: (data: AuthRequest) => Promise<void>;
   logout: () => Promise<void>;
 }
@@ -45,16 +46,21 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       body: JSON.stringify({ email, password })
     })
     const { data } = await response.json()
+    if (!response.ok) {
+      Toast({ type: 'error', text: 'Usuário ou senha inválidos' })
+      return null
+    }
     const result: Auth = data
     if (result.token && result.username) {
       setToken(data.token);
       setUsername(data.username);
       setExpirationToken(data.expirationIn);
       setIsAuthenticated(true);
-    } else {
-      setIsAuthenticated(false);
+      Toast({ type: 'success', text: 'Login efetuado com sucesso' })
+      return result
     }
-    return result
+    Toast({ type: 'error', text: 'Usuário ou senha inválidos' })
+    return null
   }
 
   const signUp = async ({ email, password }: AuthRequest) => {

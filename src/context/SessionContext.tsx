@@ -32,12 +32,14 @@ export const SessionProvider = ({ children }: SessionProviderProps): ReactElemen
         'Authorization': 'Bearer ' + token
       }
     })
-    const data: Session[] = await response.json()
-    setSessions(data);
+    const { data } = await response.json()
+    if (!data) return
+    const sessions: Session[] = data
+    setSessions(sessions);
   };
 
   const createSession = async (session: Omit<Session, 'code'>) => {
-    await fetch(`${url}/`, {
+    const sessionResponse = await fetch(`${url}/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -47,7 +49,9 @@ export const SessionProvider = ({ children }: SessionProviderProps): ReactElemen
         name: session.name
       })
     })
-    await getSessions()
+    const { data } = await sessionResponse.json()
+    const newSession: Session = data
+    setSessions([...sessions, newSession])
   };
 
   const updateSession = async (session: Session) => {

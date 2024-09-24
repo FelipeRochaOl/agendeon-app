@@ -21,9 +21,9 @@ export interface CreateCompany {
 interface CompanyContextType {
   companies: Company[]
   getCompanies: () => void
-  createCompany: (company: CreateCompany) => void
-  updateCompany: (company: Company) => void
-  deleteCompany: (id: string) => void
+  createCompany: (company: CreateCompany) => Promise<void>
+  updateCompany: (company: Company) => Promise<void>
+  deleteCompany: (id: string) => Promise<void>
 }
 
 export const CompanyContext = createContext({} as CompanyContextType)
@@ -44,8 +44,9 @@ export const CompanyProvider = ({ children }: CompanyProviderProps) => {
         'Authorization': 'Bearer ' + token
       }
     })
-    const data: Company[] = await response.json()
-    setCompany(data);
+    const { data } = await response.json()
+    const companies: Company[] = data
+    setCompany(companies);
   }
 
   const createCompany = async (companyNew: CreateCompany) => {

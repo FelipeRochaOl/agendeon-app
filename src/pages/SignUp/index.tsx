@@ -1,14 +1,16 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, FormControl, FormControlLabel, FormGroup, FormLabel, Switch, TextField } from "@mui/material";
+import { Button, FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, InputLabel, MenuItem, Select, Switch, TextField } from "@mui/material";
 import { useMask } from '@react-input/mask';
 import { ChangeEvent, useContext, useEffect, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { Toast } from "../../components/Toast";
 import { AddressContext } from "../../context/AddressContext";
 import { AuthContext } from "../../context/AuthContext";
+import { CategoryContext } from "../../context/CategoryContext";
 import { ClientContext } from "../../context/ClientContext";
 import { CompanyContext } from "../../context/CompanyContext";
+import { SessionContext } from "../../context/SessionContext";
 import { signUpFormSchema, SignUpFormValues } from "../../schemas/SignUpFormSchema";
 import { Buttons, Container, ModalForm } from "./styles";
 
@@ -21,6 +23,8 @@ export const SignUp = (props: ISignUpProps) => {
   const { createCompany } = useContext(CompanyContext)
   const { address, getAddressWithCEP, createAddress } = useContext(AddressContext)
   const { isAuthenticated, login, signUp } = useContext(AuthContext)
+  const { sessions, getSessions } = useContext(SessionContext)
+  const { categories, getCategories } = useContext(CategoryContext)
   const navigate = useNavigate()
   const [display, setDisplay] = useState(false);
   const [isBusiness, setIsBusiness] = useState(false);
@@ -28,6 +32,7 @@ export const SignUp = (props: ISignUpProps) => {
   const cnpjMask = useMask({ mask: '__.___.___/____-__', replacement: { _: /\d/ } });
 
   const {
+    control,
     register,
     handleSubmit,
     setFocus,
@@ -35,7 +40,6 @@ export const SignUp = (props: ISignUpProps) => {
     reset,
     formState: { errors },
   } = useForm<SignUpFormValues>({ resolver: zodResolver(signUpFormSchema) })
-  if (errors) console.log(errors)
 
   const resetForm = () => {
     reset()
@@ -52,7 +56,7 @@ export const SignUp = (props: ISignUpProps) => {
       email: data.email,
       password: data.password,
     })
-    if (!auth.token) {
+    if (!auth) {
       Toast({ type: "error", text: "Erro ao cadastrar usuário" })
       return
     }
@@ -121,7 +125,16 @@ export const SignUp = (props: ISignUpProps) => {
     setValue("address.uf", "")
     setValue("address.country", "")
     setIsBusiness(event.target.checked)
+    if (event.target.checked) {
+      setValue("age", undefined)
+      setValue("cpf", "")
+    }
   }
+
+  useEffect(() => {
+    getSessions()
+    getCategories()
+  }, [getSessions, getCategories])
 
   return (
     <Container $display={display}>
@@ -139,7 +152,7 @@ export const SignUp = (props: ISignUpProps) => {
         />
         {isBusiness && <small>**Razão Social</small>}
         <FormGroup className="left">
-          <FormControlLabel control={<Switch onChange={handleBusiness} />} label="É empresa?" />
+          <FormControlLabel control={<Switch onChange={handleBusiness} />} label="É empresa?" {...register("isBusiness")} />
         </FormGroup>
         {!isBusiness && <TextField
           fullWidth={true}
@@ -186,6 +199,78 @@ export const SignUp = (props: ISignUpProps) => {
               error={!!errors.cnpj}
               {...register("cnpj")}
             />
+            <FormControl fullWidth error={!!errors.sessionId}>
+              <InputLabel sx={{ mx: -1.9, }} id="session-label" className="label">Seção</InputLabel>
+              <Controller
+                control={control}
+                rules={{ required: true }}
+                name="sessionId"
+                defaultValue=""
+                render={({ field: { onChange, value, ref, name } }) => (
+                  <>
+                    <Select
+                      ref={ref}
+                      name={name}
+                      labelId="session-label"
+                      fullWidth={true}
+                      value={value}
+                      label="Seção"
+                      variant="standard"
+                      size="small"
+                      defaultValue=""
+                      error={!!errors.sessionId}
+                      onChange={onChange}
+                    >
+                      <MenuItem value="" disabled>
+                        <em>Selecione uma seção</em>
+                      </MenuItem>
+                      {sessions?.map((session) => (
+                        <MenuItem key={session.code} value={session.code}>
+                          <em>{session.name}</em>
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    {errors.sessionId && <FormHelperText>{errors.sessionId.message}</FormHelperText>}
+                  </>
+                )}
+              />
+            </FormControl>
+            <FormControl fullWidth error={!!errors.categoryId}>
+              <InputLabel sx={{ mx: -1.9, }} id="category-label" className="label">Categoria</InputLabel>
+              <Controller
+                control={control}
+                rules={{ required: true }}
+                name="categoryId"
+                defaultValue=""
+                render={({ field: { onChange, value, ref, name } }) => (
+                  <>
+                    <Select
+                      ref={ref}
+                      name={name}
+                      labelId="category-label"
+                      fullWidth={true}
+                      value={value}
+                      label="Categoria"
+                      variant="standard"
+                      size="small"
+                      defaultValue=""
+                      error={!!errors.categoryId}
+                      onChange={onChange}
+                    >
+                      <MenuItem value="" disabled>
+                        <em>Selecione uma seção</em>
+                      </MenuItem>
+                      {categories?.map((category) => (
+                        <MenuItem key={category.code} value={category.code}>
+                          <em>{category.name}</em>
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    {errors.sessionId && <FormHelperText>{errors.sessionId.message}</FormHelperText>}
+                  </>
+                )}
+              />
+            </FormControl>
             <FormControl component="fieldset">
               <FormLabel component="legend">Endereço</FormLabel>
               <TextField
