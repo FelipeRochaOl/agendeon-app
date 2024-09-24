@@ -63,11 +63,9 @@ export const Category = () => {
   }
 
   useEffect(() => {
-    if (categories.length === 0) {
-      getSessions()
-      getCategories()
-    }
-  }, [categories, getCategories, getSessions])
+    getSessions()
+    getCategories()
+  }, [getCategories, getSessions])
 
   return (
     <Container>
@@ -102,7 +100,7 @@ export const Category = () => {
                   <MenuItem value="" disabled>
                     <em>Selecione uma seção</em>
                   </MenuItem>
-                  {sessions.map((session) => (
+                  {sessions?.map((session) => (
                     <MenuItem key={session.code} value={session.code}>
                       <em>{session.name}</em>
                     </MenuItem>

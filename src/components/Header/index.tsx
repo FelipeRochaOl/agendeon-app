@@ -1,11 +1,17 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import logo from "../../assets/logo.svg";
 import { AuthContext } from "../../context/AuthContext";
 import { Container } from "./styles";
 
 export const Header = () => {
-  const { isAuthenticated } = useContext(AuthContext)
+  const { checkAuth, isAuthenticated } = useContext(AuthContext)
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      checkAuth()
+    }
+  }, [checkAuth, isAuthenticated])
 
   return (
     <Container>

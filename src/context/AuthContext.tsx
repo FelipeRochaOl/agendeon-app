@@ -23,6 +23,7 @@ export interface AuthContextType {
   login: (data: AuthRequest) => Promise<Auth | null>;
   signUp: (data: AuthRequest) => Promise<void>;
   logout: () => Promise<void>;
+  checkAuth: () => void;
 }
 
 export const AuthContext = createContext({} as AuthContextType);
@@ -54,8 +55,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     if (result.token && result.username) {
       setToken(data.token);
       setUsername(data.username);
-      setExpirationToken(data.expirationIn);
+      setExpirationToken(data.expiresIn);
       setIsAuthenticated(true);
+      localStorage.setItem('token-agendeon', data.token);
+      localStorage.setItem('username-agendeon', data.username);
+      localStorage.setItem('expirationIn-agendeon', data.expiresIn.toString());
       Toast({ type: 'success', text: 'Login efetuado com sucesso' })
       return result
     }
@@ -73,6 +77,22 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     })
   }
 
+  const checkAuth = async () => {
+    const token = localStorage.getItem('token-agendeon');
+    const username = localStorage.getItem('username-agendeon');
+    const expirationIn = localStorage.getItem('expirationIn-agendeon');
+    if (!expirationIn || parseInt(expirationIn) < Date.now()) {
+      await logout()
+      return;
+    }
+    if (token && username && expirationIn) {
+      setToken(token);
+      setUsername(username);
+      setExpirationToken(Number(expirationIn));
+      setIsAuthenticated(true);
+    }
+  }
+
   const logout = async () => {
     await fetch(`${API_URL}/auth/logout`, {
       method: 'GET',
@@ -83,10 +103,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setUsername('');
     setToken(null);
     setIsAuthenticated(false);
+    setUsername('');
+    localStorage.removeItem('token-agendeon');
+    localStorage.removeItem('username-agendeon');
+    localStorage.removeItem('expirationIn-agendeon');
   }
 
   return (
-    <AuthContext.Provider value={{ username, token, expirationToken, isAuthenticated, login, signUp, logout, setIsAuthenticated }}>
+    <AuthContext.Provider value={{ username, token, expirationToken, isAuthenticated, login, signUp, logout, setIsAuthenticated, checkAuth }}>
       {children}
     </AuthContext.Provider>
   );

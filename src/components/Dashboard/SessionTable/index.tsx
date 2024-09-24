@@ -26,7 +26,7 @@ export const SessionTable = ({ sessions, deleteSession, editSession }: SessionTa
           </TableRow>
         </TableHead>
         <TableBody>
-          {sessions.map((session) => (
+          {sessions?.map((session) => (
             <TableRow
               key={session.code}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
