@@ -4,6 +4,7 @@ import { AuthContext } from "./AuthContext"
 
 export interface Address {
   id?: string
+  token?: string
   street: string
   number: string
   complement: string
@@ -19,7 +20,7 @@ interface AddressContextType {
   address: Omit<Address, 'id'>
   addresses: Address[]
   getAddresses: () => void
-  createAddress: (address: Address) => Promise<string | undefined>
+  createAddress: (address: Address) => Promise<string | null>
   updateAddress: (address: Address) => void
   deleteAddress: (id: string) => void
   getAddressWithCEP: (cep: string) => void
@@ -50,18 +51,25 @@ export const AddressProvider = ({ children }: AddressProviderProps) => {
   }
 
   const createAddress = async (addressNew: Address) => {
-    const response = await fetch(`${url}/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + token
-      },
-      body: JSON.stringify(addressNew)
-    })
-    const { data } = await response.json()
-    const address: Address = data
-    setAddress([...addresses, address]);
-    return address.id
+    try {
+      const getToken = token ?? addressNew.token
+      const response = await fetch(`${url}/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + getToken
+        },
+        body: JSON.stringify(addressNew)
+      })
+      const { data } = await response.json()
+      if (!data) throw new Error('Erro ao criar endereço')
+      const address: Address = data
+      setAddress([...addresses, address]);
+      return address.id as string
+    } catch (error) {
+      console.error(error)
+      return null
+    }
   }
 
   const updateAddress = async (addressPut: Address) => {

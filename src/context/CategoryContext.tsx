@@ -1,4 +1,4 @@
-import { createContext, ReactElement, useContext, useState } from "react";
+import { createContext, ReactElement, useCallback, useContext, useEffect, useState } from "react";
 import { API_URL } from "../config/Http";
 import { Category, CategoryRequest } from "../interfaces/Category";
 import { AuthContext } from "./AuthContext";
@@ -25,17 +25,20 @@ export const CategoryProvider = ({ children }: CategoryProviderProps): ReactElem
   const [categories, setCategories] = useState<Category[]>([]);
   const [openForm, setOpenForm] = useState(false);
 
-  const getCategories = async () => {
-    const response = await fetch(`${url}/`, {
+  const getCategories = useCallback(async () => {
+    const response = await fetch(`${url}/list`, {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + token
       }
     })
     const { data } = await response.json()
     const categories: Category[] = data
     setCategories(categories);
-  };
+  }, [url]);
+
+  useEffect(() => {
+    getCategories()
+  }, [getCategories]);
 
   const createCategory = async (category: Omit<CategoryRequest, 'code'>) => {
     const categoryResponse = await fetch(`${url}/`, {

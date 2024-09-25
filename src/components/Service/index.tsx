@@ -4,10 +4,11 @@ import calendarAvailableIcon from "../../assets/calendar-512.png"
 import { Container, GridItem, GridItemService, GridService, ScheduleAvailable } from "./styles"
 
 interface IServiceProps {
+  id: string
   date: string
-  time: string
   service: string
   price: string
+  deleteService: (id: string) => void
 }
 
 export const Service = (props: IServiceProps) => {
@@ -23,14 +24,14 @@ export const Service = (props: IServiceProps) => {
             <img src={calendarAvailableIcon} alt="Agenda disponível" width={25} />
             <strong>Agendado para dia:</strong>
           </ScheduleAvailable>
-          <span>{props.date} às {props.time}</span>
+          <span>{props.date}hs</span>
         </GridItem>
         <GridItem>
           <span>{props.price}</span>
         </GridItem>
         <GridItem>
           <IconButton color="error" aria-label="Deletar">
-            <MdDelete onClick={() => console.log('delete')} />
+            <MdDelete onClick={() => props.deleteService(props.id)} />
           </IconButton>
         </GridItem>
       </GridService>

@@ -33,6 +33,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
   const [users, setUser] = useState<User[]>([]);
 
   const getUser = async () => {
+    if (!token) return
     const response = await fetch(`${url}/profile`, {
       headers: {
         'Content-Type': 'application/json',

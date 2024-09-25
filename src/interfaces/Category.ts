@@ -4,6 +4,7 @@ export interface Category {
   code: string;
   session: Session;
   name: string;
+  urlPath: string;
 }
 
 export interface CategoryRequest {

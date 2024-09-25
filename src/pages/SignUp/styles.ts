@@ -25,10 +25,15 @@ export const ModalForm = styled.form`
   max-width: 800px;
   min-width: 500px;
   padding: 1rem;
+  overflow: scroll;
 
   h1 {
     color: ${(props) => props.theme["blue"]};
     font-size: 3rem;
+  }
+
+  .MuiFormControl-root {
+    margin-top: 1rem;
   }
 
   fieldset {

@@ -7,6 +7,7 @@ import { darkThemeMui } from "../styles/themes/mui";
 import { Checkout } from './Checkout';
 import { Category } from './Dashboard/Category';
 import { ScheduleService } from './Dashboard/Schedule';
+import { ServiceDash } from './Dashboard/Service';
 import { Session } from './Dashboard/Session';
 import { Home } from "./Home";
 import { Schedule } from './Schedule';
@@ -33,6 +34,7 @@ export const Router = () => {
           <Route path='' element={<ScheduleService />} />
           <Route path="session" element={<Session />} />
           <Route path="category" element={<Category />} />
+          <Route path="service" element={<ServiceDash />} />
         </Route>
       </Routes>
     </ThemeProvider>

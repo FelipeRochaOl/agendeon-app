@@ -22,7 +22,7 @@ export const SignUp = (props: ISignUpProps) => {
   const { createClient } = useContext(ClientContext)
   const { createCompany } = useContext(CompanyContext)
   const { address, getAddressWithCEP, createAddress } = useContext(AddressContext)
-  const { isAuthenticated, login, signUp } = useContext(AuthContext)
+  const { isAuthenticated, signUp, setLogin } = useContext(AuthContext)
   const { sessions, getSessions } = useContext(SessionContext)
   const { categories, getCategories } = useContext(CategoryContext)
   const navigate = useNavigate()
@@ -48,11 +48,7 @@ export const SignUp = (props: ISignUpProps) => {
   }
 
   const onSubmitForm: SubmitHandler<SignUpFormValues> = async (data) => {
-    await signUp({
-      email: data.email,
-      password: data.password,
-    })
-    const auth = await login({
+    const auth = await signUp({
       email: data.email,
       password: data.password,
     })
@@ -61,11 +57,15 @@ export const SignUp = (props: ISignUpProps) => {
       return
     }
     if (!data.isBusiness) {
-      await createClient({
+      const client = await createClient({
         name: data.name as string,
         cpf: data.cpf as string,
         age: data.age as number,
       })
+      if (!client) {
+        Toast({ type: "error", text: "Erro ao cadastrar cliente" })
+        return
+      }
     } else {
       const addressId = await createAddress({
         zip: data.address?.zip as string,
@@ -76,16 +76,29 @@ export const SignUp = (props: ISignUpProps) => {
         city: data.address?.city as string,
         state: data.address?.state as string,
         uf: data.address?.uf as string,
-        country: data.address?.country as string
+        country: data.address?.country as string,
+        token: auth?.token as string
       })
-      await createCompany({
+      if (!addressId) {
+        Toast({ type: "error", text: "Erro ao cadastrar endereço" })
+        return
+      }
+      const company = await createCompany({
         companyName: data.name as string,
         tradeName: data.tradeName as string,
         cnpj: data.cnpj as string,
-        addressId: addressId as string
+        addressId: addressId as string,
+        categoryId: data.categoryId as string,
+        sessionId: data.sessionId as string,
+        token: auth?.token as string
       })
+      if (!company) {
+        Toast({ type: "error", text: "Erro ao cadastrar empresa" })
+        return
+      }
     }
     resetForm()
+    setLogin(auth)
     Toast({
       type: "success", text: "Usuário cadastrado com sucesso", options: {
         onClose: () => navigate("/dashboard")
@@ -122,6 +135,7 @@ export const SignUp = (props: ISignUpProps) => {
     setValue("address.complement", "")
     setValue("address.neighborhood", "")
     setValue("address.city", "")
+    setValue("address.state", "")
     setValue("address.uf", "")
     setValue("address.country", "")
     setIsBusiness(event.target.checked)

@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from "@mui/material"
 import Button from "@mui/material/Button/Button"
 import TextField from "@mui/material/TextField/TextField"
-import { useContext, useEffect, useState } from "react"
+import { useContext, useState } from "react"
 import { Controller, SubmitHandler, useForm } from "react-hook-form"
 import { MdInsertDriveFile } from "react-icons/md"
 import { CategoryTable } from "../../../components/Dashboard/CategoryTable"
@@ -13,9 +13,9 @@ import { Buttons, Container } from "./styles"
 
 export const Category = () => {
   const {
-    categories, getCategories, deleteCategory, updateCategory, createCategory, openForm, setOpenForm
+    categories, deleteCategory, updateCategory, createCategory, openForm, setOpenForm
   } = useContext(CategoryContext)
-  const { sessions, getSessions } = useContext(SessionContext)
+  const { sessions } = useContext(SessionContext)
   const [code, setCode] = useState("")
 
   const {
@@ -61,11 +61,6 @@ export const Category = () => {
       setFocus("name")
     }
   }
-
-  useEffect(() => {
-    getSessions()
-    getCategories()
-  }, [getCategories, getSessions])
 
   return (
     <Container>
@@ -123,7 +118,7 @@ export const Category = () => {
         />
         <Buttons>
           <Button variant="outlined" type="submit" size="small">Salvar</Button>
-          <Button variant="outlined" size="small" color="error" onClick={resetForm}>Fechar</Button>
+          <Button variant="outlined" size="small" color="error" type="reset" onClick={resetForm}>Fechar</Button>
         </Buttons>
       </form>}
       <CategoryTable categories={categories} deleteCategory={deleteCategory} editCategory={editCategory} />

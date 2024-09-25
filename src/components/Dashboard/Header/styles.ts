@@ -8,6 +8,7 @@ export const Container = styled.header`
 
   img {
     margin-left: 2rem;
+    cursor: pointer;
   }
 
   .logout {

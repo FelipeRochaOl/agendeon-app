@@ -1,4 +1,4 @@
-import { createContext, ReactElement, useContext, useState } from "react";
+import { createContext, ReactElement, useCallback, useContext, useEffect, useState } from "react";
 import { API_URL } from "../config/Http";
 import { Session } from "../interfaces/Session";
 import { AuthContext } from "./AuthContext";
@@ -25,18 +25,21 @@ export const SessionProvider = ({ children }: SessionProviderProps): ReactElemen
   const [sessions, setSessions] = useState<Session[]>([]);
   const [openForm, setOpenForm] = useState(false);
 
-  const getSessions = async () => {
-    const response = await fetch(`${url}/`, {
+  const getSessions = useCallback(async () => {
+    const response = await fetch(`${url}/list`, {
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + token
+        'Content-Type': 'application/json'
       }
     })
     const { data } = await response.json()
     if (!data) return
     const sessions: Session[] = data
     setSessions(sessions);
-  };
+  }, [url]);
+
+  useEffect(() => {
+    getSessions()
+  }, [getSessions]);
 
   const createSession = async (session: Omit<Session, 'code'>) => {
     const sessionResponse = await fetch(`${url}/`, {

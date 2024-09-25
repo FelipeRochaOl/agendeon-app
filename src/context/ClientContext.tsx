@@ -22,7 +22,7 @@ export interface CreateClient {
 interface ClientContextType {
   clients: Client[];
   getClients: () => Promise<void>;
-  createClient: (client: CreateClient) => Promise<void>;
+  createClient: (client: CreateClient) => Promise<Client | null>;
   updateClient: (clients: Client) => Promise<void>;
   deleteClient: (code: string) => Promise<void>;
 }
@@ -51,17 +51,24 @@ export const ClientProvider = ({ children }: ClientProviderProps): ReactElement<
   };
 
   const createClient = async (client: CreateClient) => {
-    const response = await fetch(`${url}/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + token
-      },
-      body: JSON.stringify(client)
-    })
-    const { data } = await response.json()
-    const clientNew: Client = data
-    setClients([...clients, clientNew]);
+    try {
+      const response = await fetch(`${url}/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify(client)
+      })
+      const { data } = await response.json()
+      if (!data) throw new Error('Erro ao criar cliente')
+      const clientNew: Client = data
+      setClients([...clients, clientNew]);
+      return clientNew
+    } catch (error) {
+      console.error(error)
+      return null
+    }
   };
 
   const updateClient = async (client: Client) => {

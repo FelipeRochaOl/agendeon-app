@@ -4,14 +4,20 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { ptBR } from '@mui/x-date-pickers/locales';
 import moment, { Moment } from 'moment-timezone';
 import 'moment/dist/locale/pt-br';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { User } from '../../../components/User';
+import { AuthContext } from '../../../context/AuthContext';
+import { CompanyContext } from '../../../context/CompanyContext';
+import { ScheduleContext } from '../../../context/ScheduleContext';
 import { Container, ScheduleCalendar, ScheduleForm, ScheduleFormSection, SectionSchedule } from './styles';
 
 moment.tz.setDefault('America/Sao_Paulo');
 
 export const ScheduleService = () => {
+  const { isBusiness } = useContext(AuthContext)
+  const { company } = useContext(CompanyContext)
+  const { schedules, getSchedules } = useContext(ScheduleContext)
   const [displayServices, setDisplayServices] = useState(false);
   const [date, setDate] = useState<Moment>(moment().minutes(0));
   const { handleSubmit } = useForm()
@@ -27,6 +33,12 @@ export const ScheduleService = () => {
       setDate(selectedDate);
     }
   }
+
+  useEffect(() => {
+    if (!schedules && isBusiness) {
+      getSchedules(company.id);
+    }
+  }, [company, getSchedules, isBusiness, schedules])
 
   return (
     <Container>
@@ -54,17 +66,16 @@ export const ScheduleService = () => {
           </ScheduleFormSection>
         </ScheduleForm>
       </SectionSchedule>
-      <h4>9:00 - 10:00</h4>
-      {displayServices && <User name='Felipe Rocha' date='21/09/2024' time='9:00hs' service='Corte Masculino' price='R$ 60,00' />}
-      <h4>10:00 - 11:00</h4>
-      <h4>11:00 - 12:00</h4>
-      <h4>13:00 - 14:00</h4>
-      <h4>14:00 - 15:00</h4>
-      <h4>15:00 - 16:00</h4>
-      <h4>16:00 - 17:00</h4>
-      <h4>17:00 - 18:00</h4>
-      <h4>18:00 - 19:00</h4>
-      <h4>19:00 - 20:00</h4>
+      <h4>Agendas</h4>
+      {displayServices && schedules?.map(schedule =>
+        <User
+          name={schedule.client.name}
+          date={schedule.formattedDate}
+          time={schedule.formattedTime}
+          service={schedule.service.description}
+          price={schedule.service.formattedValue}
+        />
+      )}
     </Container>
   )
 }

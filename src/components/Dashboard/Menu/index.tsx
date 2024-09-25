@@ -6,15 +6,16 @@ import MenuList from '@mui/material/MenuList';
 import Paper from '@mui/material/Paper/Paper';
 import { useContext, useEffect } from 'react';
 import { CiLogout } from 'react-icons/ci';
-import { FaUsers } from 'react-icons/fa';
 import { MdAddBusiness, MdCalendarMonth, MdCategory, MdContentPaste } from 'react-icons/md';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../context/AuthContext';
 import { Container } from './styles';
 
 export const Menu = () => {
   const navigate = useNavigate()
-  const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext)
+  const { pathname } = useLocation()
+  const { isAuthenticated, logout, isBusiness } = useContext(AuthContext)
+  console.log(pathname)
 
   const handleLink = (path: string) => {
     navigate(path)
@@ -26,9 +27,10 @@ export const Menu = () => {
     }
   }, [isAuthenticated, navigate])
 
-  const handleLogout = () => {
-    setIsAuthenticated(false)
-    navigate('/')
+  const handleLogout = async () => {
+    let logoutSuccess = false
+    if (isAuthenticated) logoutSuccess = await logout()
+    if (logoutSuccess) navigate('/')
   }
 
   return (
@@ -38,7 +40,7 @@ export const Menu = () => {
           <MenuItem>
             <ListItemText>Cadastros</ListItemText>
           </MenuItem>
-          <MenuItem onClick={() => handleLink('Agenda')} selected>
+          <MenuItem onClick={() => handleLink('')} selected={pathname === "/dashboard"}>
             <ListItemIcon>
               <MdCalendarMonth size={16} />
             </ListItemIcon>
@@ -46,38 +48,34 @@ export const Menu = () => {
               Agenda
             </ListItemText>
           </MenuItem>
-          <MenuItem onClick={() => handleLink('session')}>
-            <ListItemIcon>
-              <MdContentPaste size={16} />
-            </ListItemIcon>
-            <ListItemText>
-              Seção
-            </ListItemText>
-          </MenuItem>
-          <MenuItem onClick={() => handleLink('category')}>
-            <ListItemIcon>
-              <MdCategory size={16} />
-            </ListItemIcon>
-            <ListItemText>
-              Categoria
-            </ListItemText>
-          </MenuItem>
-          <MenuItem>
-            <ListItemIcon>
-              <MdAddBusiness size={16} />
-            </ListItemIcon>
-            <ListItemText>
-              Prestadores de Serviço
-            </ListItemText>
-          </MenuItem>
-          <MenuItem>
-            <ListItemIcon>
-              <FaUsers size={16} />
-            </ListItemIcon>
-            <ListItemText>
-              Clientes
-            </ListItemText>
-          </MenuItem>
+          {isBusiness && (
+            <>
+              <MenuItem onClick={() => handleLink('session')} selected={pathname === "/dashboard/session"}>
+                <ListItemIcon>
+                  <MdContentPaste size={16} />
+                </ListItemIcon>
+                <ListItemText>
+                  Seção
+                </ListItemText>
+              </MenuItem>
+              <MenuItem onClick={() => handleLink('category')} selected={pathname === "/dashboard/category"}>
+                <ListItemIcon>
+                  <MdCategory size={16} />
+                </ListItemIcon>
+                <ListItemText>
+                  Categoria
+                </ListItemText>
+              </MenuItem>
+              <MenuItem onClick={() => handleLink('service')} selected={pathname === "/dashboard/service"}>
+                <ListItemIcon>
+                  <MdAddBusiness size={16} />
+                </ListItemIcon>
+                <ListItemText>
+                  Serviços
+                </ListItemText>
+              </MenuItem>
+            </>
+          )}
           <Divider />
           <MenuItem onClick={handleLogout}>
             <ListItemIcon>
