@@ -1,31 +1,33 @@
 import { useNavigate } from "react-router-dom"
 import calendarAvailableIcon from "../../assets/calendar-512.png"
+import companhiaImg from "../../assets/companhia.png"
 import starsIcon from "../../assets/star-512.png"
 import phoneWhatsappIcon from "../../assets/whatsapp-512.png"
+import { Company } from "../../context/CompanyContext"
 import { Container, GridClient, GridItem, GridItemCellPhone, GridItemName, GridItemPhone, GridItemStreet, PhoneWhatsapp, ScheduleAvailable, Stars } from "./styles"
 
-export const Client = () => {
+export const Client = (props: Company) => {
   const navigate = useNavigate()
   const handleOpenSchedulePage = () => {
-    navigate('/schedule/client/1')
+    navigate(`/schedule/client/${props.id}`)
   }
   return (
     <Container onClick={handleOpenSchedulePage}>
       <div className="avatar">
-        <img src="https://randomuser.me/api/portraits/men/74.jpg" alt="John Doe - Cabeleireiro" />
+        <img src={companhiaImg} alt={props.name} />
       </div>
       <GridClient>
         <GridItemName>
           <strong>Nome:</strong>
-          <span>John Doe</span>
+          <span>{props.name}</span>
         </GridItemName>
         <GridItem>
           <strong>Categoria:</strong>
-          <span>Cabeleireiro</span>
+          <span>{props.category.name}</span>
         </GridItem>
         <GridItemStreet>
           <strong>Endereço:</strong>
-          <span>Rua Manoel Matias, 23</span>
+          <span>{props.address.street}</span>
         </GridItemStreet>
         <GridItemPhone>
           <strong>Telefone:</strong>
@@ -40,7 +42,7 @@ export const Client = () => {
         </GridItem>
         <GridItem>
           <strong>Bairro:</strong>
-          <span>Vila Nova</span>
+          <span>{props.address.neighborhood}</span>
         </GridItem>
         <GridItem>
           <strong>Distrito:</strong>
@@ -55,11 +57,11 @@ export const Client = () => {
         </GridItemCellPhone>
         <GridItem>
           <strong>Cidade:</strong>
-          <span>São Paulo</span>
+          <span>{props.address.city}</span>
         </GridItem>
         <GridItem>
           <strong>CEP:</strong>
-          <span>11.211-023</span>
+          <span>{props.address.zip}</span>
         </GridItem>
         <GridItem>
           <strong>Email:</strong>

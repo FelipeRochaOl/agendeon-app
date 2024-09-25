@@ -1,11 +1,16 @@
 import { useContext } from "react";
 import { NavLink } from "react-router-dom";
+import cachorroImg from '../../assets/cachorro.png';
+import companhiaImg from '../../assets/companhia.png';
 import logo from "../../assets/logo.svg";
 import { AuthContext } from "../../context/AuthContext";
+import { CompanyContext } from "../../context/CompanyContext";
 import { Container } from "./styles";
 
+
 export const Header = () => {
-  const { isAuthenticated } = useContext(AuthContext)
+  const { company } = useContext(CompanyContext)
+  const { isAuthenticated, username } = useContext(AuthContext)
 
   return (
     <Container>
@@ -22,8 +27,8 @@ export const Header = () => {
       </nav>
       {isAuthenticated
         ? <NavLink to="/dashboard" className="logout">
-          <img src="https://randomuser.me/api/portraits/thumb/men/75.jpg" alt="Avatar" />
-          <span>Felipe Rocha</span>
+          <img src={company ? companhiaImg : cachorroImg} alt="Avatar" />
+          <span>{username}</span>
         </NavLink>
         : <NavLink to="/login" className="login">Entrar</NavLink>}
     </Container>

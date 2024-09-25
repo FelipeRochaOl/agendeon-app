@@ -27,7 +27,7 @@ export const CategoryTable = ({ categories, deleteCategory, editCategory }: Cate
           </TableRow>
         </TableHead>
         <TableBody>
-          {categories.map((category) => (
+          {categories?.map((category) => (
             <TableRow
               key={category.code}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}

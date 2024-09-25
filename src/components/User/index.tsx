@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom"
+import cachorroImg from "../../assets/cachorro.png"
 import calendarAvailableIcon from "../../assets/calendar-512.png"
 import { Container, GridItem, GridUser, ScheduleAvailable } from "./styles"
 
@@ -13,12 +14,12 @@ interface IUserProps {
 export const User = (props: IUserProps) => {
   const navigate = useNavigate()
   const handleOpenSchedulePage = () => {
-    navigate('/schedule/client/1')
+    navigate('/services')
   }
   return (
     <Container onClick={handleOpenSchedulePage}>
       <div className="avatar">
-        <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="John Doe - Cliente" />
+        <img src={cachorroImg} alt={`${props.name} - Usuário`} />
       </div>
       <GridUser>
         <GridItem>

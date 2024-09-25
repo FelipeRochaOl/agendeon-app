@@ -1,4 +1,5 @@
 import { BrowserRouter } from "react-router-dom"
+import { ToastContainer } from 'react-toastify'
 import { ThemeProvider } from "styled-components"
 import { GlobalProvider } from "./context/GlobalContext"
 import { Router } from "./pages/Router"
@@ -14,6 +15,7 @@ const App = () => {
         </GlobalProvider>
       </BrowserRouter>
       <GlobalStyle />
+      <ToastContainer />
     </ThemeProvider >
   )
 }

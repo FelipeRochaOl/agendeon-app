@@ -1,18 +1,16 @@
-import { createContext, useState } from "react"
-
-export interface Service {
-  code: string
-  description: string
-  value: string
-  duration: number
-}
+import { createContext, useContext, useState } from "react"
+import { API_URL } from "../config/Http"
+import { Service, ServiceRequest } from "../interfaces/Service"
+import { AuthContext } from "./AuthContext"
 
 interface ServiceContextType {
   services: Service[]
-  getServices: () => void
-  createService: (service: Service) => void
-  updateService: (service: Service) => void
-  deleteService: (id: string) => void
+  openForm: boolean
+  getServices: (companyId: string) => Promise<void>
+  createService: (service: ServiceRequest) => Promise<void>
+  updateService: (service: ServiceRequest) => Promise<void>
+  deleteService: (id: string) => Promise<void>
+  setOpenForm: (open: boolean) => void
 }
 
 export const ServiceContext = createContext({} as ServiceContextType)
@@ -22,54 +20,59 @@ interface ServiceProviderProps {
 }
 
 export const ServiceProvider = ({ children }: ServiceProviderProps) => {
+  const { token, logout } = useContext(AuthContext)
+  const url = `${API_URL}/services`
   const [services, setService] = useState<Service[]>([])
+  const [openForm, setOpenForm] = useState(false);
 
-  const getServices = async () => {
-    const auth = 'feliperochaoliveira@gmail.com:123456'
-    const response = await fetch('http://localhost:8080/services/', {
+  const getServices = async (companyId: string) => {
+    const response = await fetch(`${url}/${companyId}`, {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa(auth)
+        'Authorization': 'Bearer ' + token
       }
     })
-    const data: Service[] = await response.json()
-    setService(data);
+    const { data } = await response.json()
+    if (response.status === 403) {
+      await logout()
+      return
+    }
+    if (!data.length) return
+    const result: Service[] = data
+    setService(result);
   }
 
-  const createService = async (serviceNew: Service) => {
-    const auth = 'feliperochaoliveira@gmail.com:123456'
-    await fetch('http://localhost:8080/services/', {
+  const createService = async (serviceNew: ServiceRequest) => {
+    await fetch(`${url}/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa(auth)
+        'Authorization': 'Bearer ' + token
       },
       body: JSON.stringify(serviceNew)
     })
-    setService([...services, serviceNew]);
+    await getServices(serviceNew.companyId)
   }
 
-  const updateService = async (servicePut: Service) => {
-    const auth = 'feliperochaoliveira@gmail.com:123456'
+  const updateService = async (servicePut: ServiceRequest) => {
     const { code, ...data } = servicePut
-    await fetch(`http://localhost:8080/services/${code}`, {
+    await fetch(`${url}/${code}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa(auth)
+        'Authorization': 'Bearer ' + token
       },
       body: JSON.stringify(data)
     })
-    setService([...services, servicePut]);
+    await getServices(servicePut.companyId)
   }
 
   const deleteService = async (code: string) => {
-    const auth = 'feliperochaoliveira@gmail.com:123456'
-    await fetch(`http://localhost:8080/services/${code}`, {
+    await fetch(`${url}/${code}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa(auth)
+        'Authorization': 'Bearer ' + token
       }
     })
     const result = services.filter((data) => data.code !== code);
@@ -77,7 +80,7 @@ export const ServiceProvider = ({ children }: ServiceProviderProps) => {
   }
 
   return (
-    <ServiceContext.Provider value={{ services, getServices, createService, updateService, deleteService }}>
+    <ServiceContext.Provider value={{ services, openForm, getServices, createService, updateService, deleteService, setOpenForm }}>
       {children}
     </ServiceContext.Provider>
   )

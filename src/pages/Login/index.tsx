@@ -14,7 +14,7 @@ interface ILoginProps {
 export const Login = (props: ILoginProps) => {
   const navigate = useNavigate()
   const [display, setDisplay] = useState(false);
-  const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext)
+  const { isAuthenticated, login } = useContext(AuthContext)
 
   const {
     register,
@@ -30,15 +30,12 @@ export const Login = (props: ILoginProps) => {
     navigate("/")
   }
 
-  const onSubmit: SubmitHandler<LoginFormValues> = (data) => {
-    console.log(data)
+  const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
     resetForm()
-    setIsAuthenticated(true)
-    if (data.email === "feliperocha@gmail.com") {
-      navigate("/services")
-      return
+    const auth = await login(data)
+    if (auth && auth.token) {
+      navigate("/dashboard")
     }
-    navigate("/dashboard")
   }
 
   useEffect(() => {

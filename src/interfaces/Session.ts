@@ -1,3 +1,5 @@
 import { SessionFormValues } from "../schemas/SessionFormSchema";
 
-export interface Session extends SessionFormValues {}
+export interface Session extends SessionFormValues {
+  urlPath?: string;
+}

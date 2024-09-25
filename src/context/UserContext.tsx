@@ -1,4 +1,6 @@
-import { createContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
+import { API_URL } from "../config/Http";
+import { AuthContext } from "./AuthContext";
 
 export interface User {
   id: string
@@ -6,10 +8,15 @@ export interface User {
   createdAt: string[]
 }
 
+export interface CreateUser {
+  email: string
+  password: string
+}
+
 export interface UserContextType {
   users: User[];
   getUser: () => Promise<void>;
-  createUser: (user: User) => Promise<void>;
+  createUser: (user: CreateUser) => Promise<void>;
   updateUser: (user: User) => Promise<void>;
   deleteUser: (id: string) => Promise<void>;
 }
@@ -21,41 +28,41 @@ interface UserProviderProps {
 }
 
 export const UserProvider = ({ children }: UserProviderProps) => {
+  const { token } = useContext(AuthContext)
+  const url = `${API_URL}/users`
   const [users, setUser] = useState<User[]>([]);
 
   const getUser = async () => {
-    const auth = 'feliperochaoliveira@gmail.com:123456'
-    const response = await fetch('http://localhost:8080/users/', {
+    if (!token) return
+    const response = await fetch(`${url}/profile`, {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa(auth)
+        'Authorization': 'Bearer ' + token
       }
     })
     const data: User[] = await response.json()
     setUser(data);
   };
 
-  const createUser = async (user: User) => {
-    const auth = 'feliperochaoliveira@gmail.com:123456'
-    await fetch('http://localhost:8080/users/', {
+  const createUser = async (user: CreateUser) => {
+    await fetch(`${url}/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa(auth)
+        'Authorization': 'Bearer ' + token
       },
       body: JSON.stringify(user)
     })
-    setUser([...users, user]);
+    getUser()
   };
 
   const updateUser = async (user: User) => {
-    const auth = 'feliperochaoliveira@gmail.com:123456'
     const { id, ...data } = user
-    await fetch(`http://localhost:8080/users/${id}`, {
+    await fetch(`${url}/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa(auth)
+        'Authorization': 'Bearer ' + token
       },
       body: JSON.stringify(data)
     })
@@ -63,12 +70,11 @@ export const UserProvider = ({ children }: UserProviderProps) => {
   };
 
   const deleteUser = async (id: string) => {
-    const auth = 'feliperochaoliveira@gmail.com:123456'
-    await fetch(`http://localhost:8080/users/${id}`, {
+    await fetch(`${url}/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa(auth)
+        'Authorization': 'Bearer ' + token
       }
     })
     const result = users.filter((client) => client.id !== id);
