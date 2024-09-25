@@ -34,7 +34,7 @@ interface ClientProviderProps {
 }
 
 export const ClientProvider = ({ children }: ClientProviderProps): ReactElement<ClientContextType> => {
-  const { token } = useContext(AuthContext)
+  const { token, logout } = useContext(AuthContext)
   const url = `${API_URL}/clients`
   const [clients, setClients] = useState<Client[]>([]);
 
@@ -45,6 +45,10 @@ export const ClientProvider = ({ children }: ClientProviderProps): ReactElement<
         'Authorization': 'Bearer ' + token
       }
     })
+    if (response.status === 403) {
+      await logout()
+      return
+    }
     const { data } = await response.json()
     const clients: Client[] = data
     setClients(clients);
@@ -60,6 +64,10 @@ export const ClientProvider = ({ children }: ClientProviderProps): ReactElement<
         },
         body: JSON.stringify(client)
       })
+      if (response.status === 403) {
+        await logout()
+        return null
+      }
       const { data } = await response.json()
       if (!data) throw new Error('Erro ao criar cliente')
       const clientNew: Client = data
@@ -73,7 +81,7 @@ export const ClientProvider = ({ children }: ClientProviderProps): ReactElement<
 
   const updateClient = async (client: Client) => {
     const { id, ...data } = client
-    await fetch(`${url}/${id}`, {
+    const response = await fetch(`${url}/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -81,17 +89,25 @@ export const ClientProvider = ({ children }: ClientProviderProps): ReactElement<
       },
       body: JSON.stringify(data)
     })
+    if (response.status === 403) {
+      await logout()
+      return
+    }
     setClients([...clients, client]);
   };
 
   const deleteClient = async (id: string) => {
-    await fetch(`${url}/${id}`, {
+    const response = await fetch(`${url}/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + token
       }
     })
+    if (response.status === 403) {
+      await logout()
+      return
+    }
     const result = clients.filter((client) => client.id !== id);
     setClients(result);
   };

@@ -43,7 +43,7 @@ export const ServiceProvider = ({ children }: ServiceProviderProps) => {
   }
 
   const createService = async (serviceNew: ServiceRequest) => {
-    await fetch(`${url}/`, {
+    const response = await fetch(`${url}/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -51,12 +51,16 @@ export const ServiceProvider = ({ children }: ServiceProviderProps) => {
       },
       body: JSON.stringify(serviceNew)
     })
+    if (response.status === 403) {
+      await logout()
+      return
+    }
     await getServices(serviceNew.companyId)
   }
 
   const updateService = async (servicePut: ServiceRequest) => {
     const { code, ...data } = servicePut
-    await fetch(`${url}/${code}`, {
+    const response = await fetch(`${url}/${code}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -64,17 +68,25 @@ export const ServiceProvider = ({ children }: ServiceProviderProps) => {
       },
       body: JSON.stringify(data)
     })
+    if (response.status === 403) {
+      await logout()
+      return
+    }
     await getServices(servicePut.companyId)
   }
 
   const deleteService = async (code: string) => {
-    await fetch(`${url}/${code}`, {
+    const response = await fetch(`${url}/${code}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + token
       }
     })
+    if (response.status === 403) {
+      await logout()
+      return
+    }
     const result = services.filter((data) => data.code !== code);
     setService(result);
   }

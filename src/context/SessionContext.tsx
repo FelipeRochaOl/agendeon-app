@@ -20,7 +20,7 @@ interface SessionProviderProps {
 }
 
 export const SessionProvider = ({ children }: SessionProviderProps): ReactElement<SessionContextType> => {
-  const { token } = useContext(AuthContext)
+  const { token, logout } = useContext(AuthContext)
   const url = `${API_URL}/session`
   const [sessions, setSessions] = useState<Session[]>([]);
   const [openForm, setOpenForm] = useState(false);
@@ -42,7 +42,7 @@ export const SessionProvider = ({ children }: SessionProviderProps): ReactElemen
   }, [getSessions]);
 
   const createSession = async (session: Omit<Session, 'code'>) => {
-    const sessionResponse = await fetch(`${url}/`, {
+    const response = await fetch(`${url}/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -52,13 +52,17 @@ export const SessionProvider = ({ children }: SessionProviderProps): ReactElemen
         name: session.name
       })
     })
-    const { data } = await sessionResponse.json()
+    if (response.status === 403) {
+      await logout()
+      return
+    }
+    const { data } = await response.json()
     const newSession: Session = data
     setSessions([...sessions, newSession])
   };
 
   const updateSession = async (session: Session) => {
-    await fetch(`${url}/${session.code}`, {
+    const response = await fetch(`${url}/${session.code}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -68,17 +72,25 @@ export const SessionProvider = ({ children }: SessionProviderProps): ReactElemen
         name: session.name
       })
     })
+    if (response.status === 403) {
+      await logout()
+      return
+    }
     await getSessions()
   };
 
   const deleteSession = async (code: string) => {
-    await fetch(`${url}/${code}`, {
+    const response = await fetch(`${url}/${code}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + token
       }
     })
+    if (response.status === 403) {
+      await logout()
+      return
+    }
     await getSessions()
   };
 

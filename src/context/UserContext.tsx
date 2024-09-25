@@ -28,7 +28,7 @@ interface UserProviderProps {
 }
 
 export const UserProvider = ({ children }: UserProviderProps) => {
-  const { token } = useContext(AuthContext)
+  const { token, logout } = useContext(AuthContext)
   const url = `${API_URL}/users`
   const [users, setUser] = useState<User[]>([]);
 
@@ -45,7 +45,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
   };
 
   const createUser = async (user: CreateUser) => {
-    await fetch(`${url}/`, {
+    const response = await fetch(`${url}/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -53,12 +53,16 @@ export const UserProvider = ({ children }: UserProviderProps) => {
       },
       body: JSON.stringify(user)
     })
+    if (response.status === 403) {
+      await logout()
+      return
+    }
     getUser()
   };
 
   const updateUser = async (user: User) => {
     const { id, ...data } = user
-    await fetch(`${url}/${id}`, {
+    const response = await fetch(`${url}/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -66,17 +70,25 @@ export const UserProvider = ({ children }: UserProviderProps) => {
       },
       body: JSON.stringify(data)
     })
+    if (response.status === 403) {
+      await logout()
+      return
+    }
     setUser([...users, user]);
   };
 
   const deleteUser = async (id: string) => {
-    await fetch(`${url}/${id}`, {
+    const response = await fetch(`${url}/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + token
       }
     })
+    if (response.status === 403) {
+      await logout()
+      return
+    }
     const result = users.filter((client) => client.id !== id);
     setUser(result);
   };

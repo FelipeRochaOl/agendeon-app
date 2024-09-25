@@ -21,7 +21,7 @@ interface CategoryProviderProps {
 
 export const CategoryProvider = ({ children }: CategoryProviderProps): ReactElement<CategoryContextType> => {
   const url = `${API_URL}/categories`
-  const { token } = useContext(AuthContext)
+  const { token, logout } = useContext(AuthContext)
   const [categories, setCategories] = useState<Category[]>([]);
   const [openForm, setOpenForm] = useState(false);
 
@@ -41,7 +41,7 @@ export const CategoryProvider = ({ children }: CategoryProviderProps): ReactElem
   }, [getCategories]);
 
   const createCategory = async (category: Omit<CategoryRequest, 'code'>) => {
-    const categoryResponse = await fetch(`${url}/`, {
+    const response = await fetch(`${url}/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -52,14 +52,18 @@ export const CategoryProvider = ({ children }: CategoryProviderProps): ReactElem
         name: category.name
       })
     })
-    const { data } = await categoryResponse.json()
+    if (response.status === 403) {
+      await logout()
+      return
+    }
+    const { data } = await response.json()
     if (!data) return
     const newCategory: Category = data
     setCategories([...categories, newCategory])
   };
 
   const updateCategory = async (category: CategoryRequest) => {
-    await fetch(`${url}/${category.code}`, {
+    const response = await fetch(`${url}/${category.code}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -70,17 +74,25 @@ export const CategoryProvider = ({ children }: CategoryProviderProps): ReactElem
         name: category.name
       })
     })
+    if (response.status === 403) {
+      await logout()
+      return
+    }
     await getCategories()
   };
 
   const deleteCategory = async (code: string) => {
-    await fetch(`${url}/${code}`, {
+    const response = await fetch(`${url}/${code}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + token
       }
     })
+    if (response.status === 403) {
+      await logout()
+      return
+    }
     await getCategories()
   };
 
