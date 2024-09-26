@@ -14,7 +14,7 @@ interface ILoginProps {
 export const Login = (props: ILoginProps) => {
   const navigate = useNavigate()
   const [display, setDisplay] = useState(false);
-  const { isAuthenticated, login } = useContext(AuthContext)
+  const { isAuthenticated, login, isBusiness } = useContext(AuthContext)
 
   const {
     register,
@@ -33,7 +33,10 @@ export const Login = (props: ILoginProps) => {
   const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
     resetForm()
     const auth = await login(data)
-    if (auth && auth.token) {
+    if (auth && auth.token && !isBusiness) {
+      navigate("/services")
+    }
+    if (auth && auth.token && isBusiness) {
       navigate("/dashboard")
     }
   }

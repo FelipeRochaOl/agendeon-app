@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from "react"
+import { Toast } from "../components/Toast"
 import { API_URL } from "../config/Http"
 import { AuthContext } from "./AuthContext"
 
@@ -33,7 +34,7 @@ interface AddressProviderProps {
 }
 
 export const AddressProvider = ({ children }: AddressProviderProps) => {
-  const { token } = useContext(AuthContext)
+  const { token, logout } = useContext(AuthContext)
   const url = `${API_URL}/addresses`
   const [addresses, setAddress] = useState<Address[]>([])
   const [address, setAddressCEP] = useState<Omit<Address, 'id'>>({} as Omit<Address, 'id'>)
@@ -45,6 +46,10 @@ export const AddressProvider = ({ children }: AddressProviderProps) => {
         'Authorization': 'Bearer ' + token
       }
     })
+    if (response.status === 403) {
+      await logout()
+      return
+    }
     const { data } = await response.json()
     const address: Address[] = data
     setAddress(address);
@@ -61,6 +66,10 @@ export const AddressProvider = ({ children }: AddressProviderProps) => {
         },
         body: JSON.stringify(addressNew)
       })
+      if (response.status === 403) {
+        await logout()
+        return null
+      }
       const { data } = await response.json()
       if (!data) throw new Error('Erro ao criar endereço')
       const address: Address = data
@@ -74,7 +83,7 @@ export const AddressProvider = ({ children }: AddressProviderProps) => {
 
   const updateAddress = async (addressPut: Address) => {
     const { id, ...data } = addressPut
-    await fetch(`${url}/${id}`, {
+    const response = await fetch(`${url}/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -82,17 +91,27 @@ export const AddressProvider = ({ children }: AddressProviderProps) => {
       },
       body: JSON.stringify(data)
     })
+    if (response.status === 403) {
+      await logout()
+      return
+    }
+    Toast({ type: 'info', text: 'Endereço atualizado com sucesso' })
     setAddress([...addresses, addressPut]);
   }
 
   const deleteAddress = async (id: string) => {
-    await fetch(`${url}/${id}`, {
+    const response = await fetch(`${url}/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + token
       }
     })
+    if (response.status === 403) {
+      await logout()
+      return
+    }
+    Toast({ type: 'warning', text: 'Endereço deletado com sucesso' })
     const result = addresses.filter((data) => data.id !== id);
     setAddress(result);
   }
