@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from "react"
+import { Toast } from "../components/Toast"
 import { API_URL } from "../config/Http"
 import { Service, ServiceRequest } from "../interfaces/Service"
 import { AuthContext } from "./AuthContext"
@@ -55,6 +56,7 @@ export const ServiceProvider = ({ children }: ServiceProviderProps) => {
       await logout()
       return
     }
+    Toast({ type: 'success', text: 'Serviço criado com sucesso' })
     await getServices(serviceNew.companyId)
   }
 
@@ -72,6 +74,7 @@ export const ServiceProvider = ({ children }: ServiceProviderProps) => {
       await logout()
       return
     }
+    Toast({ type: 'info', text: 'Serviço atualizado com sucesso' })
     await getServices(servicePut.companyId)
   }
 
@@ -88,6 +91,7 @@ export const ServiceProvider = ({ children }: ServiceProviderProps) => {
       return
     }
     const result = services.filter((data) => data.code !== code);
+    Toast({ type: 'warning', text: 'Servico deletado com sucesso' })
     setService(result);
   }
 

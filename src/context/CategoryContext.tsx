@@ -1,4 +1,5 @@
 import { createContext, ReactElement, useCallback, useContext, useEffect, useState } from "react";
+import { Toast } from "../components/Toast";
 import { API_URL } from "../config/Http";
 import { Category, CategoryRequest } from "../interfaces/Category";
 import { AuthContext } from "./AuthContext";
@@ -59,6 +60,7 @@ export const CategoryProvider = ({ children }: CategoryProviderProps): ReactElem
     const { data } = await response.json()
     if (!data) return
     const newCategory: Category = data
+    Toast({ type: 'success', text: 'Categoria adicionada com sucesso' })
     setCategories([...categories, newCategory])
   };
 
@@ -78,6 +80,7 @@ export const CategoryProvider = ({ children }: CategoryProviderProps): ReactElem
       await logout()
       return
     }
+    Toast({ type: 'info', text: 'Categoria atualizada com sucesso' })
     await getCategories()
   };
 
@@ -93,6 +96,7 @@ export const CategoryProvider = ({ children }: CategoryProviderProps): ReactElem
       await logout()
       return
     }
+    Toast({ type: 'warning', text: 'Categoria deletada com sucesso' })
     await getCategories()
   };
 

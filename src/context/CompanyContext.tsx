@@ -148,6 +148,7 @@ export const CompanyProvider = ({ children }: CompanyProviderProps) => {
       await logout()
       return
     }
+    Toast({ type: 'info', text: 'Empresa atualizada com sucesso' })
     setCompanies([...companies, companyPut]);
   }
 
@@ -164,6 +165,7 @@ export const CompanyProvider = ({ children }: CompanyProviderProps) => {
       return
     }
     const result = companies.filter((data) => data.id !== id);
+    Toast({ type: 'error', text: 'Empresa deletada com sucesso' })
     setCompanies(result);
   }
 

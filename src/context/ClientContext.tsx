@@ -1,4 +1,5 @@
 import { createContext, ReactElement, useContext, useState } from "react";
+import { Toast } from "../components/Toast";
 import { API_URL } from "../config/Http";
 import { AuthContext } from "./AuthContext";
 import { User } from "./UserContext";
@@ -93,6 +94,7 @@ export const ClientProvider = ({ children }: ClientProviderProps): ReactElement<
       await logout()
       return
     }
+    Toast({ type: 'info', text: 'Cliente atualizado com sucesso' })
     setClients([...clients, client]);
   };
 
@@ -109,6 +111,7 @@ export const ClientProvider = ({ children }: ClientProviderProps): ReactElement<
       return
     }
     const result = clients.filter((client) => client.id !== id);
+    Toast({ type: 'warning', text: 'Cliente deletado com sucesso' })
     setClients(result);
   };
 

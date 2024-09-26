@@ -1,4 +1,5 @@
 import { createContext, ReactElement, useCallback, useContext, useEffect, useState } from "react";
+import { Toast } from "../components/Toast";
 import { API_URL } from "../config/Http";
 import { Session } from "../interfaces/Session";
 import { AuthContext } from "./AuthContext";
@@ -58,6 +59,7 @@ export const SessionProvider = ({ children }: SessionProviderProps): ReactElemen
     }
     const { data } = await response.json()
     const newSession: Session = data
+    Toast({ type: 'info', text: 'Seção criada com sucesso' })
     setSessions([...sessions, newSession])
   };
 
@@ -76,6 +78,7 @@ export const SessionProvider = ({ children }: SessionProviderProps): ReactElemen
       await logout()
       return
     }
+    Toast({ type: 'info', text: 'Seçao atualizada com sucesso' })
     await getSessions()
   };
 
@@ -91,6 +94,7 @@ export const SessionProvider = ({ children }: SessionProviderProps): ReactElemen
       await logout()
       return
     }
+    Toast({ type: 'warning', text: 'Seção deletada com sucesso' })
     await getSessions()
   };
 

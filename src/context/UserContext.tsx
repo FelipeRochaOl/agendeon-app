@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from "react";
+import { Toast } from "../components/Toast";
 import { API_URL } from "../config/Http";
 import { AuthContext } from "./AuthContext";
 
@@ -57,6 +58,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
       await logout()
       return
     }
+    Toast({ type: 'success', text: 'Usuário criado com sucesso' })
     getUser()
   };
 
@@ -74,6 +76,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
       await logout()
       return
     }
+    Toast({ type: 'info', text: 'Usuário atualizado com sucesso' })
     setUser([...users, user]);
   };
 
@@ -90,6 +93,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
       return
     }
     const result = users.filter((client) => client.id !== id);
+    Toast({ type: 'warning', text: 'Usuário deletado com sucesso' })
     setUser(result);
   };
 

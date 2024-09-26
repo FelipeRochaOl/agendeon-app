@@ -104,6 +104,7 @@ export const ScheduleProvider = ({ children }: ScheduleProviderProps) => {
     }
     const { data } = await response.json()
     const history: ScheduleHistory[] = data ?? []
+    Toast({ type: 'info', text: 'Busca de horários já agendados concluído' })
     setHistory(history);
   }
 
@@ -142,6 +143,7 @@ export const ScheduleProvider = ({ children }: ScheduleProviderProps) => {
       await logout()
       return
     }
+    Toast({ type: 'info', text: 'Agenda atualizada com sucesso' })
     setSchedules([...schedules, schedulePut]);
   }
 
@@ -158,6 +160,7 @@ export const ScheduleProvider = ({ children }: ScheduleProviderProps) => {
       return
     }
     const result = schedules.filter((data) => data.id !== id);
+    Toast({ type: 'warning', text: 'Agenda deletada com sucesso' })
     setSchedules(result);
   }
 

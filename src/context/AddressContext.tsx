@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from "react"
+import { Toast } from "../components/Toast"
 import { API_URL } from "../config/Http"
 import { AuthContext } from "./AuthContext"
 
@@ -94,6 +95,7 @@ export const AddressProvider = ({ children }: AddressProviderProps) => {
       await logout()
       return
     }
+    Toast({ type: 'info', text: 'Endereço atualizado com sucesso' })
     setAddress([...addresses, addressPut]);
   }
 
@@ -109,6 +111,7 @@ export const AddressProvider = ({ children }: AddressProviderProps) => {
       await logout()
       return
     }
+    Toast({ type: 'warning', text: 'Endereço deletado com sucesso' })
     const result = addresses.filter((data) => data.id !== id);
     setAddress(result);
   }
