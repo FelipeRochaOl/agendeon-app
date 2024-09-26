@@ -51,6 +51,7 @@ export const SignUp = (props: ISignUpProps) => {
     const auth = await signUp({
       email: data.email,
       password: data.password,
+      isBusiness: data.isBusiness
     })
     if (!auth) {
       Toast({ type: "error", text: "Erro ao cadastrar usuário" })
@@ -61,6 +62,7 @@ export const SignUp = (props: ISignUpProps) => {
         name: data.name as string,
         cpf: data.cpf as string,
         age: data.age as number,
+        token: auth.token as string
       })
       if (!client) {
         Toast({ type: "error", text: "Erro ao cadastrar cliente" })
