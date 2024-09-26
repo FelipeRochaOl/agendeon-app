@@ -13,6 +13,7 @@ export interface Auth {
 export interface AuthRequest {
   email: string;
   password: string;
+  isBusiness?: boolean;
 }
 
 export interface AuthContextType {
@@ -66,14 +67,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }
 
-  const signUp = async ({ email, password }: AuthRequest) => {
+  const signUp = async ({ email, password, isBusiness }: AuthRequest) => {
     try {
       const response = await fetch(`${API_URL}/auth/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password, isBusiness })
       })
       const { data } = await response.json()
       if (!data) throw new Error('Erro ao criar usuário')

@@ -18,6 +18,7 @@ export interface CreateClient {
   name: string
   cpf: string
   age: number
+  token?: string
 }
 
 interface ClientContextType {
@@ -61,7 +62,7 @@ export const ClientProvider = ({ children }: ClientProviderProps): ReactElement<
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + token
+          'Authorization': 'Bearer ' + client.token
         },
         body: JSON.stringify(client)
       })
