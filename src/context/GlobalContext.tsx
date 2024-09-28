@@ -4,6 +4,7 @@ import { CategoryProvider } from "./CategoryContext";
 import { ClientProvider } from "./ClientContext";
 import { CommentProvider } from "./CommentContext";
 import { CompanyProvider } from "./CompanyContext";
+import { FilterProvider } from "./FilterContext";
 import { ScheduleProvider } from "./ScheduleContext";
 import { ServiceProvider } from "./ServiceContext";
 import { SessionProvider } from "./SessionContext";
@@ -21,15 +22,17 @@ export const GlobalProvider = ({ children }: GlobalContextProps) => {
           <ClientProvider>
             <CommentProvider>
               <CompanyProvider>
-                <ScheduleProvider>
-                  <ServiceProvider>
-                    <SessionProvider>
-                      <UserProvider>
-                        {children}
-                      </UserProvider>
-                    </SessionProvider>
-                  </ServiceProvider>
-                </ScheduleProvider>
+                <FilterProvider>
+                  <ScheduleProvider>
+                    <ServiceProvider>
+                      <SessionProvider>
+                        <UserProvider>
+                          {children}
+                        </UserProvider>
+                      </SessionProvider>
+                    </ServiceProvider>
+                  </ScheduleProvider>
+                </FilterProvider>
               </CompanyProvider>
             </CommentProvider>
           </ClientProvider>

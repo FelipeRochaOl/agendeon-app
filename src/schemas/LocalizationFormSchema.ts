@@ -1,10 +1,7 @@
 import { z } from "zod";
 
 export const localizationFormSchema = z.object({
-  postcode: z
-    .string()
-    .min(1, "CEP é obrigatório")
-    .regex(/^\d{5}-\d{3}$/, "CEP inválido"),
+  postcode: z.string().optional(),
   city: z.string(),
   neighborhood: z.string(),
 });
