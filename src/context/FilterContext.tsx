@@ -20,7 +20,7 @@ export const FilterContext = createContext({} as FilterContextType)
 export const FilterProvider = ({ children }: FilterProviderProps) => {
   const { token, logout } = useContext(AuthContext)
   const url = `${API_URL}/companies`
-  const { companies, setCompanies } = useContext(CompanyContext)
+  const { setCompanies } = useContext(CompanyContext)
 
   const filterCompanyByAddress = async (filter: FilterCompany) => {
     try {
@@ -37,13 +37,14 @@ export const FilterProvider = ({ children }: FilterProviderProps) => {
         return
       }
       const { data } = await response.json()
-      if (!data) throw new Error('Erro ao buscar empresa')
+      if (!data.length) throw new Error('Erro ao buscar empresa')
       const companies: Company[] = data
       Toast({ type: 'success', text: 'Empresa encontrada com sucesso' })
       setCompanies(companies);
     } catch (error) {
       console.error(error)
       Toast({ type: 'info', text: 'Nenhuma empresa foi encontrada' })
+      setCompanies([])
     }
   }
 
@@ -60,13 +61,14 @@ export const FilterProvider = ({ children }: FilterProviderProps) => {
         return
       }
       const { data } = await response.json()
-      if (!data) throw new Error('Erro ao buscar empresa')
-      const company: Company = data
+      if (!data.length) throw new Error('Erro ao buscar empresa')
+      const companies: Company[] = data
       Toast({ type: 'success', text: 'Empresa encontrada com sucesso' })
-      setCompanies([...companies, company]);
+      setCompanies(companies);
     } catch (error) {
       console.error(error)
       Toast({ type: 'info', text: 'Nenhuma empresa foi encontrada' })
+      setCompanies([])
     }
   }
 
@@ -83,13 +85,14 @@ export const FilterProvider = ({ children }: FilterProviderProps) => {
         return
       }
       const { data } = await response.json()
-      if (!data) throw new Error('Erro ao buscar empresa')
-      const company: Company = data
+      if (!data.length) throw new Error('Erro ao buscar empresa')
+      const companies: Company[] = data
       Toast({ type: 'success', text: 'Empresa encontrada com sucesso' })
-      setCompanies([...companies, company]);
+      setCompanies(companies);
     } catch (error) {
       console.error(error)
       Toast({ type: 'info', text: 'Nenhuma empresa foi encontrada' })
+      setCompanies([])
     }
   }
 

@@ -23,7 +23,7 @@ export const Client = (props: Company) => {
         </GridItemName>
         <GridItem>
           <strong>Categoria:</strong>
-          <span>{props.category.name}</span>
+          <span>{props.category.name ?? ''}</span>
         </GridItem>
         <GridItemStreet>
           <strong>Endereço:</strong>

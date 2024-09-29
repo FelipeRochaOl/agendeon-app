@@ -50,8 +50,8 @@ export const Services = () => {
     }
     filterCompanyByAddress({
       zip: data.postcode,
-      city: data.city,
-      neighborhood: data.neighborhood
+      city: data.city!,
+      neighborhood: data.neighborhood!
     })
   }
 
@@ -102,7 +102,9 @@ export const Services = () => {
         Toast({ type: "error", text: "Categoria não encontrada" })
         return
       }
-      filterCompanyByCategory(session.code!, findCategory.code!)
+      if (session && category) {
+        filterCompanyByCategory(session.code!, findCategory.code!)
+      }
     }
   }, [section, category])
 
@@ -163,7 +165,7 @@ export const Services = () => {
         <List>
           {categories?.map(category => (
             <ItemList key={category.code}>
-              <Link to={`/services/${category.urlPath}`}>
+              <Link to={`/services/${category.session.urlPath}/${category.urlPath}`}>
                 <img src={handleGetImageByTag(category.urlPath)} alt={category.name} />
                 <span>{category.name}</span>
               </Link>
@@ -174,7 +176,7 @@ export const Services = () => {
       <SectionFilter>
         <h2>Resultado</h2>
         <SectionResults>
-          {companies.map(company => <Client key={company.id} {...company} />)}
+          {companies && companies.map(company => <Client key={company.id} {...company} />)}
         </SectionResults>
       </SectionFilter>
     </Container>
