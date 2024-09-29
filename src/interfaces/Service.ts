@@ -1,4 +1,4 @@
-import { Company } from "../context/CompanyContext";
+import { Company } from "./Company";
 
 export interface Service {
   code: string;

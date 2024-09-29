@@ -3,7 +3,7 @@ import calendarAvailableIcon from "../../assets/calendar-512.png"
 import companhiaImg from "../../assets/companhia.png"
 import starsIcon from "../../assets/star-512.png"
 import phoneWhatsappIcon from "../../assets/whatsapp-512.png"
-import { Company } from "../../context/CompanyContext"
+import { Company } from "../../interfaces/Company"
 import { Container, GridClient, GridItem, GridItemCellPhone, GridItemName, GridItemPhone, GridItemStreet, PhoneWhatsapp, ScheduleAvailable, Stars } from "./styles"
 
 export const Client = (props: Company) => {
@@ -23,7 +23,7 @@ export const Client = (props: Company) => {
         </GridItemName>
         <GridItem>
           <strong>Categoria:</strong>
-          <span>{props.category.name}</span>
+          <span>{props.category.name ?? ''}</span>
         </GridItem>
         <GridItemStreet>
           <strong>Endereço:</strong>

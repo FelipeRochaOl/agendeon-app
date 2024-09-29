@@ -52,4 +52,6 @@ export const ItemList = styled.li`
 
 export const SectionResults = styled.section`
   display: flex;
+  flex-direction: column;
+  gap: 1rem;
 `;

@@ -1,40 +1,19 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react"
 import { Toast } from "../components/Toast"
 import { API_URL } from "../config/Http"
-import { Category } from "../interfaces/Category"
-import { Address } from "./AddressContext"
+import { Company, CreateCompany } from "../interfaces/Company"
 import { AuthContext } from "./AuthContext"
-import { User } from "./UserContext"
-
-export interface Company {
-  id: string
-  name: string
-  companyName: string
-  cnpj: string
-  address: Address
-  category: Category
-  user: User
-}
-
-export interface CreateCompany {
-  tradeName: string
-  companyName: string
-  cnpj: string
-  addressId: string
-  categoryId: string
-  sessionId: string
-  token?: string
-}
 
 interface CompanyContextType {
-  company: Company
-  companies: Company[]
-  getCompanies: () => void
-  getCompanyById: (id: string) => Promise<void>
-  getCompanyByUserId: () => Promise<void>
-  createCompany: (company: CreateCompany) => Promise<Company | null>
-  updateCompany: (company: Company) => Promise<void>
-  deleteCompany: (id: string) => Promise<void>
+  company: Company;
+  companies: Company[];
+  setCompanies: React.Dispatch<React.SetStateAction<Company[]>>;
+  getCompanies: () => void;
+  getCompanyById: (id: string) => Promise<void>;
+  getCompanyByUserId: () => Promise<void>;
+  createCompany: (company: CreateCompany) => Promise<Company | null>;
+  updateCompany: (company: Company) => Promise<void>;
+  deleteCompany: (id: string) => Promise<void>;
 }
 
 export const CompanyContext = createContext({} as CompanyContextType)
@@ -169,8 +148,22 @@ export const CompanyProvider = ({ children }: CompanyProviderProps) => {
     setCompanies(result);
   }
 
+  useEffect(() => {
+    getCompanies()
+  }, [getCompanies])
+
   return (
-    <CompanyContext.Provider value={{ company, companies, getCompanies, getCompanyByUserId, createCompany, updateCompany, deleteCompany, getCompanyById }}>
+    <CompanyContext.Provider value={{
+      company,
+      companies,
+      setCompanies,
+      getCompanies,
+      getCompanyByUserId,
+      createCompany,
+      updateCompany,
+      deleteCompany,
+      getCompanyById
+    }}>
       {children}
     </CompanyContext.Provider>
   )
